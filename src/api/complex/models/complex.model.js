@@ -18,6 +18,13 @@ const complexSchema = new mongoose.Schema({
   developer: mongoose.Schema.Types.ObjectId,
   properties: mongoose.Schema.Types.ObjectId,
   information: String,
+  media: mongoose.Schema.Types.ObjectId,
+  map_images: [mongoose.Schema.Types.ObjectId],
+  location: {
+    lan: String,
+    t: String,
+  },
+  map_model: mongoose.Schema.Types.ObjectId,
   build_year: Date,
   address: String,
   contact: {

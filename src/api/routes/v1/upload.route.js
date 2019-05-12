@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const Media = require('./../../complex/models/media.model');
 
 const router = express.Router();
 const rootDir = path.dirname(require.main.filename);
@@ -35,7 +36,16 @@ router.post('/', upload.single('myFile'), (req, res, next) => {
     error.httpStatusCode = 400;
     return next(error);
   }
-  res.send(file);
+
+  const Media_ = {
+    path: `${file.path}.${req.type || 'jpg'}`,
+    name: req.name || '',
+  };
+
+  const MediaObj = new Media(Media_);
+  MediaObj.save();
+
+  res.send(MediaObj);
 });
 
 module.exports = router;
