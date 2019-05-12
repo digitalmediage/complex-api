@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 
-const StingRequired = {
+const stringRequired = {
   type: String,
   required: true,
 };
@@ -13,8 +13,8 @@ const StingRequired = {
  */
 
 const complexSchema = new mongoose.Schema({
-  name: StingRequired,
-  cadastra: StingRequired,
+  name: stringRequired,
+  cadastra: stringRequired,
   developer: mongoose.Schema.Types.ObjectId,
   properties: mongoose.Schema.Types.ObjectId,
   information: String,
@@ -28,8 +28,8 @@ const complexSchema = new mongoose.Schema({
   build_year: Date,
   address: String,
   contact: {
-    email: StingRequired,
-    tell: StingRequired,
+    email: stringRequired,
+    tell: stringRequired,
   },
   charge_fee: mongoose.Schema.Types.Decimal128,
   floor: {
