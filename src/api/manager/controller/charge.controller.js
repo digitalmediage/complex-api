@@ -17,3 +17,17 @@ exports.CreateCharge = (req, res, next) => {
   });
 };
 
+exports.GetCharge = (req, res, next) => {
+  chargeModel.get({}, (err, charge) => {
+    if (err) {
+      res.json({
+        error: err,
+      });
+    }
+
+    res.json({
+      data: charge,
+    });
+  });
+};
+
