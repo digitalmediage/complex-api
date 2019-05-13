@@ -4,5 +4,6 @@ const mapModelController = require('./../../complex/controllers/map_model.contro
 const router = express.Router();
 
 router.post('/map_model', mapModelController.createMapModel);
+router.get('/map_model', mapModelController.getMapModel);
 
 module.exports = router;
