@@ -16,15 +16,34 @@ const complexSchema = new mongoose.Schema({
   name: stringRequired,
   cadastra: stringRequired,
   developer: mongoose.Schema.Types.ObjectId,
-  properties: mongoose.Schema.Types.ObjectId,
+  properties: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Property',
+  },
+  manager: {
+    current_manager: mongoose.Schema.Types.ObjectId,
+    history: [mongoose.Schema.Types.ObjectId],
+  },
   information: String,
-  media: mongoose.Schema.Types.ObjectId,
-  map_images: [mongoose.Schema.Types.ObjectId],
+  media: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Media',
+  },
+  map_images: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Media',
+  },
   location: {
     lan: String,
     t: String,
   },
-  map_model: mongoose.Schema.Types.ObjectId,
+  map_model: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'mapModel',
+  },
+  views_count: Number,
+  city: String,
+  origin: String,
   build_year: Date,
   address: String,
   contact: {

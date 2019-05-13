@@ -20,8 +20,11 @@ const propertySchema = new mongoose.Schema({
     type: ObjectId,
     ref: 'Complex',
   },
-  manager: ObjectId,
-  media: ObjectId,
+  owner: ObjectId,
+  media: {
+    type: [ObjectId],
+    ref: 'Media',
+  },
   size: Number,
   rooms: {
     beds_rooms: Number,
@@ -30,21 +33,32 @@ const propertySchema = new mongoose.Schema({
     garage: Number,
   },
   features: [String],
+  furnish: {
+    type: String,
+    enum: ['none', 'semi-furnish', 'full-furnish'],
+  },
   reservation: {
     status: Boolean,
     can_reserve: Boolean,
     min_price: Decimal,
     min_time: Number,
+    paid_money: Boolean,
   },
+  price: Decimal,
+  views_count: Number,
   veranda_size: Number,
   information: String,
   type: {
     type: String,
-    enum: ['Home', 'office'],
+    enum: ['Home', 'office', 'land', 'apartment', 'commercial'],
   },
-  sales_status: {
+  status: {
     type: String,
-    enum: ['sold', 'available', 'reserved'],
+    enum: ['sold', 'available', 'reserved', 'unavailable'],
+  },
+  deal_type: {
+    type: String,
+    enum: ['sell', 'rent', 'short_term_rent', 'lease', 'barter'],
   },
   cadastra: String,
   soft_delete: Boolean,
