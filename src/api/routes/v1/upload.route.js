@@ -22,7 +22,7 @@ const upload = multer({
 
 const uploadHandler = (req, res, next) => {
   console.log(rootDir);
-  res.sendFile(`${rootDir}/api/tests/upload/upload.html`);
+  res.sendFile(`${rootDir}/api/user/tests/upload/upload.html`);
 };
 
 router.get('/', uploadHandler);
