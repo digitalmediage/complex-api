@@ -6,14 +6,17 @@ exports.createMapModel = (req, res, next) => {
       res.json({
         error: err,
       });
-
-      res.json({
-        data: mapModelObj,
-      });
     }
-  });
 
-  mapModel.getMapMedia({ complex: req.complex }, (err, mapModelObj) => {
+    res.json({
+      data: mapModelObj,
+    });
+
+  });
+};
+
+exports.getMapModel = (req, res, next) => {
+  mapModel.get({ complex: req.complex }, (err, mapModelObj) => {
     if (err) {
       res.json({
         error: err,

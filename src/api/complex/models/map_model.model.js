@@ -19,9 +19,16 @@ const MapMediaSchema = new mongoose.Schema({
     y: NumberRequired,
     width: NumberRequired,
     height: NumberRequired,
+    floor: {
+      floor_number: Number,
+      floor_title: String,
+      floor_image: mongoose.Schema.Types.ObjectId,
+    },
+    info: String,
   },
-  floor: mongoose.Schema.Types.ObjectId,
-  info: String,
+  image: mongoose.Schema.Types.ObjectId,
+}, {
+  timestamps: true,
 });
 
 module.exports = MapMediaSchema;

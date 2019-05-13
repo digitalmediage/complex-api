@@ -6,6 +6,7 @@ const authRoutes = require('./auth.route');
 const complexRoutes = require('./complex.route');
 const propertyRoutes = require('./property.route');
 const uploadRoutes = require('./upload.route');
+const sampleRoutes = require('./sample.route');
 
 const router = express.Router();
 
@@ -24,5 +25,7 @@ router.use('/auth', authRoutes);
 router.use('/complex', complexRoutes);
 router.use('/property', propertyRoutes);
 router.use('/upload', uploadRoutes);
+router.use('/test', sampleRoutes);
+
 
 module.exports = router;
