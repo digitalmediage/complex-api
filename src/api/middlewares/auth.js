@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const passport = require('passport');
-const User = require('../models/user.model');
+const User = require('../user/models/user.model');
 const APIError = require('../utils/APIError');
 
 const ADMIN = 'admin';

@@ -1,13 +1,13 @@
 const express = require('express');
 const validate = require('express-validation');
-const controller = require('../../controllers/auth.controller');
+const controller = require('../../user/controllers/auth.controller');
 const oAuthLogin = require('../../middlewares/auth').oAuth;
 const {
   login,
   register,
   oAuth,
   refresh,
-} = require('../../validations/auth.validation');
+} = require('../../user/validations/auth.validation');
 
 const router = express.Router();
 
