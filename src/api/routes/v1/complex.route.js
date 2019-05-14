@@ -36,4 +36,6 @@ router
    */
   .post(complexController.createComplex);
 
+router.get('/:id', complexController.getComplexById);
+
 module.exports = router;

@@ -23,13 +23,30 @@ exports.getComplex = (req, res, next) => {
       res.json({
         error: err,
       });
-    }
-    console.log(complex);
+    } else {
+      console.log(complex);
 
-    res.json({
-      message: 'Get complex',
-      data: complex,
-      status: 200,
-    });
+      res.json({
+        message: 'Get complex',
+        data: complex,
+        status: 200,
+      });
+    }
+  });
+};
+
+exports.getComplexById = (req, res, next) => {
+  Complex.get({ _id: req.params.id }, (err, complex) => {
+    if (err) {
+      res.json({
+        error: err,
+      });
+    } else {
+      res.json({
+        message: 'Get complex',
+        data: complex,
+        status: 200,
+      });
+    }
   });
 };
