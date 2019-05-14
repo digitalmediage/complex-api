@@ -8,6 +8,7 @@ const propertyRoutes = require('./property.route');
 const managerRoutes = require('./manager.route');
 const uploadRoutes = require('./upload.route');
 const sampleRoutes = require('./sample.route');
+const newsRoutes = require('./news.route');
 
 const router = express.Router();
 
@@ -28,6 +29,7 @@ router.use('/property', propertyRoutes);
 router.use('/upload', uploadRoutes);
 router.use('/manager', managerRoutes);
 router.use('/test', sampleRoutes);
+router.use('/news', newsRoutes);
 
 
 module.exports = router;
