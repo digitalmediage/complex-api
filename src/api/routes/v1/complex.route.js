@@ -36,6 +36,22 @@ router
    */
   .post(complexController.createComplex);
 
+/**
+ * @api {get} v1/complex/:id get Complex
+ * @apiDescription get specific Complex
+ * @apiVersion 1.0.0
+ * @apiName getSpecificComplex
+ * @apiGroup Complex
+ * @apiPermission null
+ *
+ * @apiParam  {String}             id     complex's is
+ *
+ *
+ * @apiSuccess {Object[]}  specific complex.
+ *
+ */
 router.get('/:id', complexController.getComplexById);
+router.put('/update/:id', complexController.updateComplex);
+router.delete('/remove/:id', complexController.removeComplex);
 
 module.exports = router;
