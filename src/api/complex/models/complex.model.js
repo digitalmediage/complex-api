@@ -47,7 +47,7 @@ const complexSchema = new mongoose.Schema({
   build_year: Date,
   address: String,
   contact: {
-    email: stringRequired,
+    email: String,
     tell: stringRequired,
   },
   charge_fee: mongoose.Schema.Types.Decimal128,
