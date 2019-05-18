@@ -60,4 +60,8 @@ const complexSchema = new mongoose.Schema({
   timestamps: true,
 });
 
+complexSchema.index({
+  '$**': 'text',
+});
+
 module.exports = complexSchema;

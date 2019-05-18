@@ -36,8 +36,15 @@ exports.getComplex = (req, res, next) => {
 };
 
 exports.getDeveloperComplex = (req, res, next) => {
+  const nameFilter = req.query.name;
+  console.log(nameFilter);
+  console.log('nameFilter');
   ComplexModel.get({
     developer: req.params.developer,
+    $text: {
+      $search: nameFilter,
+      $diacriticSensitive: true,
+    },
   }, (err, complex) => {
     if (err) {
       res.json({
@@ -113,4 +120,3 @@ exports.removeComplex = (req, res, next) => {
     }
   });
 };
-
