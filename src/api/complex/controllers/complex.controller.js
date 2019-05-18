@@ -1,3 +1,4 @@
+const httpStatus = require('http-status');
 const ComplexModel = require('./../DAO/complex.dao');
 
 exports.createComplex = (req, res, next) => {
@@ -7,10 +8,10 @@ exports.createComplex = (req, res, next) => {
         error: err,
       });
     } else {
+      res.status(httpStatus.CREATED);
       res.json({
         message: 'Complex created successfully',
         data: complex,
-        status: 200,
       });
     }
   });
@@ -24,8 +25,7 @@ exports.getComplex = (req, res, next) => {
         error: err,
       });
     } else {
-      console.log(complex);
-
+      res.status(httpStatus.OK);
       res.json({
         message: 'Get complex',
         data: complex,
@@ -34,6 +34,25 @@ exports.getComplex = (req, res, next) => {
     }
   });
 };
+
+exports.getDeveloperComplex = (req, res, next) => {
+  ComplexModel.get({
+    developer: req.params.developer,
+  }, (err, complex) => {
+    if (err) {
+      res.json({
+        error: err,
+      });
+    } else {
+      res.status(httpStatus.OK);
+      res.json({
+        message: 'Get Developer complex',
+        data: complex,
+      });
+    }
+  });
+};
+
 
 exports.getComplexById = (req, res, next) => {
   ComplexModel.get({
@@ -67,7 +86,6 @@ exports.updateComplex = (req, res, next) => {
         error: err,
       });
     } else {
-      console.log(req.body.complex_name);
       res.json({
         message: 'Update complex',
         data: complex,

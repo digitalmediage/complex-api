@@ -51,6 +51,7 @@ router
  *
  */
 router.get('/:id', complexController.getComplexById);
+router.get('/developer/:developer', complexController.getDeveloperComplex);
 router.put('/update/:id', complexController.updateComplex);
 router.delete('/remove/:id', complexController.removeComplex);
 

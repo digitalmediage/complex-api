@@ -5,7 +5,7 @@ const httpStatus = require('http-status');
 const expect = require('chai');
 const sinon = require('sinon');
 
-const app = require('../../index');
+const app = require('./../../index');
 
 describe('Complex API', async () => {
   const complex = {
@@ -17,6 +17,18 @@ describe('Complex API', async () => {
     },
     properties: [],
   };
+
+  describe('POST /v1/complex', () => {
+    it('Get all Complex', () => {
+      return (app)
+        .get('/v1/complex')
+        .expect(httpStatus.OK)
+        .then((res) => {
+          expect(res.body).to.be.an('array');
+          expect(res.body).to.have.lengthOf(1);
+        });
+    });
+  });
 
   describe('POST /v1/complex', () => {
     it('should create a new complex when request is ok', () => {

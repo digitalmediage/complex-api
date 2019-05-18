@@ -4,10 +4,10 @@ const httpStatus = require('http-status');
 const { expect } = require('chai');
 const sinon = require('sinon');
 const moment = require('moment-timezone');
-const app = require('../../../index');
-const User = require('../../models/user.model');
-const RefreshToken = require('../../models/refreshToken.model');
-const authProviders = require('../../services/authProviders');
+const app = require('./../../index');
+const User = require('./../../api/user/models/user.model');
+const RefreshToken = require('./../../api/user/models/refreshToken.model');
+const authProviders = require('./../../api/services/authProviders');
 
 const sandbox = sinon.createSandbox();
 
