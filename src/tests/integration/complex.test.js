@@ -1,85 +1,80 @@
+/* eslint-disable camelcase */
 /* eslint-disable arrow-body-style */
 /* eslint-disable no-unused-expressions */
 const request = require('supertest');
 const httpStatus = require('http-status');
+const Complex = require('./../../api/complex/DAO/complex.dao');
 const expect = require('chai');
+const { some, omitBy, isNil } = require('lodash');
 const sinon = require('sinon');
 
 const app = require('./../../index');
 
-describe('Complex API', async () => {
-  const complex = {
-    name: 'complex name',
-    address: 'georgia blab blab',
-    contact: {
-      email: 'hamid@gmail.com',
-      tell: '09122526777',
-    },
-    properties: [],
-  };
+/**
+ * root level hooks
+ */
 
-  describe('POST /v1/complex', () => {
+async function format(complex) {
+  // get complex from database
+  const dbComplex = (await Complex.findOne({
+    name: complex.name,
+  }));
+
+  // remove null and undefined properties
+  return omitBy(dbComplex, isNil);
+}
+
+describe('Complex API', async () => {
+  beforeEach(async () => {
+    const dbComplex = {
+      complex_1: {
+        name: 'sanaz',
+        developer: '5ce051dc7f306293680e3f48',
+        cadastra: '343535245',
+        floor: '2',
+        address: 'georgia blab blab',
+        contact: {
+          email: 'hamid@gmail.com',
+          tell: '09122526777',
+        },
+        properties: [],
+      },
+      complex_2: {
+        name: 'ali',
+        developer: '5ce051dc7f306293680e3f48',
+        cadastra: '343535245',
+        floor: '2',
+        address: 'georgia blab blab',
+        contact: {
+          email: 'hamid@gmail.com',
+          tell: '09122526777',
+        },
+        properties: [],
+      },
+    };
+    await Complex.insertMany([dbComplex.complex_1, dbComplex.complex_2]);
+  });
+
+  describe('GET /v1/complex', () => {
     it('Get all Complex', () => {
       return (app)
         .get('/v1/complex')
         .expect(httpStatus.OK)
         .then((res) => {
+          const complex_1 = format(dbComplex.complex_1);
+          const complex_2 = format(dbComplex.complex_2);
+
+          const includesComplex_1 = some(res.body, complex_1);
+          const includesComplex_2 = some(res.body, complex_2);
+
+          // before comparing it is necessary to convert String to Date
+          res.body[0].createdAt = new Date(res.body[0].createdAt);
+          res.body[1].createdAt = new Date(res.body[1].createdAt);
+
           expect(res.body).to.be.an('array');
-          expect(res.body).to.have.lengthOf(1);
-        });
-    });
-  });
-
-  describe('POST /v1/complex', () => {
-    it('should create a new complex when request is ok', () => {
-      return request(app)
-        .post('/v1/complex')
-        .send(complex)
-        .expect(httpStatus.CREATED)
-        .then((res) => {
-          expect(res.body).to.include(complex);
-        });
-    }); // end test
-    it('should report error when complex_name already exists', () => {
-      complex.name = 'name';
-
-      return request(app)
-        .post('/v1/complex')
-        .send(complex)
-        .expect(httpStatus.CONFLICT)
-        .then((res) => {
-          const {
-            field,
-          } = res.body.errors[0];
-          const {
-            location,
-          } = res.body.errors[0];
-          const {
-            messages,
-          } = res.body.errors[0];
-          expect(field).to.be.equal('email');
-          expect(location).to.be.equal('body');
-          expect(messages).to.include('"email" already exists');
-        });
-    }); // end tes
-    it('should report error when contact (tell) is not provided', () => {
-      return request(app)
-        .post('/v1/complex')
-        .send(complex)
-        .expect(httpStatus.BAD_REQUEST)
-        .then((res) => {
-          const {
-            field,
-          } = res.body.errors[0];
-          const {
-            location,
-          } = res.body.errors[0];
-          const {
-            messages,
-          } = res.body.errors[0];
-          expect(field).to.be.equal('tell');
-          expect(location).to.be.equal('body');
-          expect(messages).to.include('contact not provided');
+          // expect(res.body).to.have.lengthOf(2);
+          expect(includesComplex_1).to.be.true;
+          expect(includesComplex_2).to.be.true;
         });
     });
   });

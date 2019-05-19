@@ -36,15 +36,38 @@ exports.getComplex = (req, res, next) => {
 };
 
 exports.getDeveloperComplex = (req, res, next) => {
+  ComplexModel.get({
+    developer: req.params.developer,
+  }, (err, complex) => {
+    if (err) {
+      res.json({
+        error: err,
+      });
+    } else {
+      res.status(httpStatus.OK);
+      res.json({
+        message: 'Get Developer complex',
+        data: complex,
+      });
+    }
+  });
+};
+
+
+exports.getDeveloperComplexByFilter = (req, res, next) => {
   const nameFilter = req.query.name;
-  console.log(nameFilter);
-  console.log('nameFilter');
+  const date = req.query.date;
+  const dateFrom = `$lte ${date}`;
+  const dateTo = `$gte ${date}`;
+  console.log(dateFrom);
+  console.log('date');
   ComplexModel.get({
     developer: req.params.developer,
     $text: {
       $search: nameFilter,
       $diacriticSensitive: true,
     },
+    $and: [{ createdAt: dateTo }],
   }, (err, complex) => {
     if (err) {
       res.json({

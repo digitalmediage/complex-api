@@ -15,7 +15,10 @@ const stringRequired = {
 const complexSchema = new mongoose.Schema({
   name: stringRequired,
   cadastra: stringRequired,
-  developer: mongoose.Schema.Types.ObjectId,
+  developer: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
   properties: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Property',
