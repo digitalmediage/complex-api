@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const MediaModel = require('./../models/media.model');
+const httpStatus = require('http-status');
+const APIError = require('../../utils/APIError');
 
 
 const stringRequired = {
@@ -14,7 +17,7 @@ const stringRequired = {
 
 const complexSchema = new mongoose.Schema({
   name: stringRequired,
-  cadastra: stringRequired,
+  cadastra: String,
   developer: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
@@ -32,8 +35,8 @@ const complexSchema = new mongoose.Schema({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Media',
   },
-  map_images: {
-    type: [mongoose.Schema.Types.ObjectId],
+  map_image: {
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Media',
   },
   location: {
@@ -66,5 +69,54 @@ const complexSchema = new mongoose.Schema({
 complexSchema.index({
   '$**': 'text',
 });
+
+/**
+ * Add your
+ * - pre-save hooks
+ * - validations
+ * - virtuals
+ */
+complexSchema.pre('save', async function save(next) {
+
+
+  try {
+    // generate custom cadastra code
+    if (this.cadastra === null || this.cadastra === '') {
+      const randomVal = (Math.random() * (9000 - 10)) + 10;
+      this.cadastra = Math.round(randomVal);
+    }
+
+    // check if image_map not exist in media database
+    // logic => image not uploaded, id not exist
+    const developer = await MediaModel.find({
+      _id: this.map_image,
+    });
+    console.log(developer.length);
+    console.log('developer');
+
+    if (developer.length === 0) {
+      throw new APIError({
+        message: ' image not uploaded ',
+        status: httpStatus.CONFLICT,
+      });
+    }
+
+
+    return next();
+  } catch (error) {
+    console.log(error);
+    console.log(error);
+    return next(error);
+  }
+});
+
+// complexSchema.path('map_image').validate = async (data) => {
+//   const developer = await MediaModel.find({
+//     _id: data,
+//   });
+//   console.log(developer);
+//   console.log('developer');
+//   return false;
+// };
 
 module.exports = complexSchema;
