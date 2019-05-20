@@ -1,9 +1,19 @@
+/* eslint-disable prefer-destructuring */
+
+// 3d-party Dependencies
 const httpStatus = require('http-status');
+
+// Models
 const ComplexModel = require('./../DAO/complex.dao');
+
+// Utility
+const parseQuery = require('./../../utils/parseQuery');
+
 
 exports.createComplex = (req, res, next) => {
   ComplexModel.create(req.body, (err, complex) => {
     if (err) {
+      res.status(httpStatus.BAD_GATEWAY);
       res.json({
         error: err,
       });
@@ -19,8 +29,15 @@ exports.createComplex = (req, res, next) => {
 
 
 exports.getComplex = (req, res, next) => {
-  ComplexModel.get({}, (err, complex) => {
+  const query = req.query;
+
+  // Parse query for Filters on Model (helper fn)
+  const filterOptions = ['developer', 'city', 'name'];
+  const parsedQuery = parseQuery(query, filterOptions);
+
+  ComplexModel.get(parsedQuery, (err, complex) => {
     if (err) {
+      res.status(httpStatus.BAD_GATEWAY);
       res.json({
         error: err,
       });
@@ -29,7 +46,6 @@ exports.getComplex = (req, res, next) => {
       res.json({
         message: 'Get complex',
         data: complex,
-        status: 200,
       });
     }
   });
@@ -53,6 +69,29 @@ exports.getDeveloperComplex = (req, res, next) => {
   });
 };
 
+exports.testM = (req, res, next) => {
+  const oo = {};
+  if (req.query.developer) {
+    oo.developer = req.query.developer;
+  }
+
+  if (req.query.city) {
+    oo.city = req.query.city;
+  }
+  console.time('mongoose');
+  ComplexModel.get(oo, (err, data) => {
+    if (err) {
+      console.log(err);
+      console.log('error happened');
+      res.send(err);
+    } else {
+      // console.timeLog('mongoose');
+      console.log(data);
+      res.send(data);
+    }
+  });
+  console.timeEnd('mongoose');
+};
 
 exports.getDeveloperComplexByFilter = (req, res, next) => {
   const nameFilter = req.query.name;
@@ -67,7 +106,9 @@ exports.getDeveloperComplexByFilter = (req, res, next) => {
       $search: nameFilter,
       $diacriticSensitive: true,
     },
-    $and: [{ createdAt: dateTo }],
+    $and: [{
+      createdAt: dateTo,
+    }],
   }, (err, complex) => {
     if (err) {
       res.json({

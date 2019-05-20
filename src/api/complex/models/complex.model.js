@@ -49,7 +49,7 @@ const complexSchema = new mongoose.Schema({
   },
   views_count: Number,
   city: String,
-  origin: String,
+  country: String,
   build_year: Date,
   address: String,
   contact: {
@@ -77,11 +77,9 @@ complexSchema.index({
  * - virtuals
  */
 complexSchema.pre('save', async function save(next) {
-
-
   try {
     // generate custom cadastra code
-    if (this.cadastra === null || this.cadastra === '') {
+    if (!this.cadastra || this.cadastra === '') {
       const randomVal = (Math.random() * (9000 - 10)) + 10;
       this.cadastra = Math.round(randomVal);
     }
@@ -110,13 +108,5 @@ complexSchema.pre('save', async function save(next) {
   }
 });
 
-// complexSchema.path('map_image').validate = async (data) => {
-//   const developer = await MediaModel.find({
-//     _id: data,
-//   });
-//   console.log(developer);
-//   console.log('developer');
-//   return false;
-// };
 
 module.exports = complexSchema;
