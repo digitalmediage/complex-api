@@ -1,5 +1,15 @@
+
+// Main Module Dependency
 const express = require('express');
+const validate = require('express-validation');
+
+// Controller 
 const complexController = require('./../../complex/controllers/complex.controller');
+
+// Validator
+const {
+  listComplex,
+} = require('./../../complex/validation/complex.validation');
 
 const router = express.Router();
 
@@ -19,7 +29,7 @@ router
    *
    */
 
-  .get(complexController.getComplex)
+  .get(validate(listComplex), complexController.getComplex)
   /**
    * @api {get} v1/complex create Complex
    * @apiDescription Create new Complex

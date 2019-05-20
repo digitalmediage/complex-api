@@ -21,4 +21,13 @@ module.exports = {
       },
     },
   },
+
+  listComplex: {
+    query: {
+      developer: Joi.string().max(30),
+      country: Joi.string(),
+      build_year: Joi.string(),
+      createdAt: Joi.string(),
+    },
+  },
 };

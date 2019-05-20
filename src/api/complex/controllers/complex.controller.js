@@ -32,7 +32,7 @@ exports.getComplex = (req, res, next) => {
   const query = req.query;
 
   // Parse query for Filters on Model (helper fn)
-  const filterOptions = ['developer', 'city', 'name'];
+  const filterOptions = ['developer', 'city', 'name', 'country', 'build_year', 'createdAt'];
   const parsedQuery = parseQuery(query, filterOptions);
 
   ComplexModel.get(parsedQuery, (err, complex) => {
