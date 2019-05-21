@@ -156,9 +156,7 @@ exports.getDeveloperComplex = (req, res, next) => {
 
 
 exports.getComplexById = (req, res, next) => {
-  ComplexModel.get({
-    _id: req.params.id,
-  }, (err, complex) => {
+  ComplexModel.getById(req.params.id, (err, complex) => {
     if (err) {
       res.json({
         error: err,

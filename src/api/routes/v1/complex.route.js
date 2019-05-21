@@ -63,12 +63,12 @@ router
  */
 router.get('/developer/:developer', validate(listDeveloperComplex), complexController.getDeveloperComplex);
 
-// router
-//   .route('/:id')
+router
+  .route('/:id')
 
-//   .get(complexController.getComplexById)
-//   .put(complexController.updateComplex)
-//   .delete(complexController.removeComplex);
+  .get(complexController.getComplexById)
+  .put(complexController.updateComplex)
+  .delete(complexController.removeComplex);
 
 
 module.exports = router;

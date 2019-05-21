@@ -13,6 +13,10 @@ complexSchema.statics = {
     await list(query, cb, options.page, options.perPage, this);
   },
 
+  async getById(id, cb) {
+    await this.findOne({ _id: id }, cb);
+  },
+
   async create(data, cb) {
     const complex = new this(data);
     await complex.save(cb);
