@@ -9,7 +9,14 @@ const ComplexModel = require('./../DAO/complex.dao');
 
 // Utility
 const parseQuery = require('./../../utils/parseQuery');
+const APIError = require('../../utils/APIError');
 
+
+/**
+ * Create new complex
+ *
+ * @public
+ */
 
 exports.createComplex = (req, res, next) => {
   ComplexModel.create(req.body, (err, complex) => {
@@ -29,6 +36,12 @@ exports.createComplex = (req, res, next) => {
 };
 
 
+/**
+ * Get All Complex with filters and limit
+ *
+ * @public
+ */
+
 exports.getComplex = (req, res, next) => {
   const query = req.query;
 
@@ -41,7 +54,7 @@ exports.getComplex = (req, res, next) => {
   // Merge Pagination options
   // if query-string no exist set default
   query.page ? options.page = query.page : options.page = 1;
-  query.per_page ? options.perPage = query.perPage : options.perPage = 10;
+  query.per_page ? options.perPage = parseInt(query.per_page, 10) : options.perPage = 10;
 
   ComplexModel.get(parsedQuery, (err, complex) => {
     if (err) {
@@ -59,11 +72,43 @@ exports.getComplex = (req, res, next) => {
   }, options);
 };
 
+
+/**
+ * Get All Complex with filters and limit
+ *
+ * @public
+ */
+
 exports.getDeveloperComplex = (req, res, next) => {
-  ComplexModel.get({
-    developer: req.params.developer,
-  }, (err, complex) => {
+  const query = req.query;
+
+  // Parse query for Filters on Model (helper fn)
+  const filterOptions = ['city', 'name', 'country', 'build_year', 'createdAt'];
+  const parsedQuery = parseQuery(query, filterOptions);
+
+  // Merge developer param with query object
+  // eslint-disable-next-line dot-notation
+  if (!req.params.developer || req.params.developer === '') {
+    throw new APIError({
+      message: ' image not uploaded ',
+      status: httpStatus.CONFLICT,
+    });
+  }
+
+  parsedQuery['developer'] = req.params.developer;
+
+  // eslint-disable-next-line prefer-const
+  let options = Object.create(null);
+
+  // Merge Pagination options
+  // if query-string no exist set default
+  query.page ? options.page = query.page : options.page = 1;
+  query.per_page ? options.perPage = parseInt(query.per_page, 10) : options.perPage = 10;
+
+
+  ComplexModel.get(parsedQuery, (err, complex) => {
     if (err) {
+      res.status(httpStatus.BAD_GATEWAY);
       res.json({
         error: err,
       });
@@ -74,63 +119,40 @@ exports.getDeveloperComplex = (req, res, next) => {
         data: complex,
       });
     }
-  });
+  }, options);
 };
 
-exports.testM = (req, res, next) => {
-  const oo = {};
-  if (req.query.developer) {
-    oo.developer = req.query.developer;
-  }
 
-  if (req.query.city) {
-    oo.city = req.query.city;
-  }
-  console.time('mongoose');
-  ComplexModel.get(oo, (err, data) => {
-    if (err) {
-      console.log(err);
-      console.log('error happened');
-      res.send(err);
-    } else {
-      // console.timeLog('mongoose');
-      console.log(data);
-      res.send(data);
-    }
-  });
-  console.timeEnd('mongoose');
-};
-
-exports.getDeveloperComplexByFilter = (req, res, next) => {
-  const nameFilter = req.query.name;
-  const date = req.query.date;
-  const dateFrom = `$lte ${date}`;
-  const dateTo = `$gte ${date}`;
-  console.log(dateFrom);
-  console.log('date');
-  ComplexModel.get({
-    developer: req.params.developer,
-    $text: {
-      $search: nameFilter,
-      $diacriticSensitive: true,
-    },
-    $and: [{
-      createdAt: dateTo,
-    }],
-  }, (err, complex) => {
-    if (err) {
-      res.json({
-        error: err,
-      });
-    } else {
-      res.status(httpStatus.OK);
-      res.json({
-        message: 'Get Developer complex',
-        data: complex,
-      });
-    }
-  });
-};
+// exports.getDeveloperComplexByFilter = (req, res, next) => {
+//   const nameFilter = req.query.name;
+//   const date = req.query.date;
+//   const dateFrom = `$lte ${date}`;
+//   const dateTo = `$gte ${date}`;
+//   console.log(dateFrom);
+//   console.log('date');
+//   ComplexModel.get({
+//     developer: req.params.developer,
+//     $text: {
+//       $search: nameFilter,
+//       $diacriticSensitive: true,
+//     },
+//     $and: [{
+//       createdAt: dateTo,
+//     }],
+//   }, (err, complex) => {
+//     if (err) {
+//       res.json({
+//         error: err,
+//       });
+//     } else {
+//       res.status(httpStatus.OK);
+//       res.json({
+//         message: 'Get Developer complex',
+//         data: complex,
+//       });
+//     }
+//   });
+// };
 
 
 exports.getComplexById = (req, res, next) => {
