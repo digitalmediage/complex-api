@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable prefer-destructuring */
 
 // 3d-party Dependencies
@@ -34,6 +35,13 @@ exports.getComplex = (req, res, next) => {
   // Parse query for Filters on Model (helper fn)
   const filterOptions = ['developer', 'city', 'name', 'country', 'build_year', 'createdAt'];
   const parsedQuery = parseQuery(query, filterOptions);
+  // eslint-disable-next-line prefer-const
+  let options = Object.create(null);
+
+  // Merge Pagination options
+  // if query-string no exist set default
+  query.page ? options.page = query.page : options.page = 1;
+  query.per_page ? options.perPage = query.perPage : options.perPage = 10;
 
   ComplexModel.get(parsedQuery, (err, complex) => {
     if (err) {
@@ -48,7 +56,7 @@ exports.getComplex = (req, res, next) => {
         data: complex,
       });
     }
-  });
+  }, options);
 };
 
 exports.getDeveloperComplex = (req, res, next) => {

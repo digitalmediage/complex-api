@@ -2,10 +2,14 @@
 /* eslint-disable arrow-body-style */
 /* eslint-disable no-unused-expressions */
 const request = require('supertest');
+const { expect } = require('chai');
 const httpStatus = require('http-status');
 const Complex = require('./../../api/complex/DAO/complex.dao');
-const expect = require('chai');
-const { some, omitBy, isNil } = require('lodash');
+const {
+  some,
+  omitBy,
+  isNil,
+} = require('lodash');
 const sinon = require('sinon');
 
 const app = require('./../../index');
@@ -25,8 +29,9 @@ async function format(complex) {
 }
 
 describe('Complex API', async () => {
+  let dbComplex;
   beforeEach(async () => {
-    const dbComplex = {
+    dbComplex = {
       complex_1: {
         name: 'sanaz',
         developer: '5ce051dc7f306293680e3f48',
@@ -57,10 +62,10 @@ describe('Complex API', async () => {
 
   describe('GET /v1/complex', () => {
     it('Get all Complex', () => {
-      return (app)
+      return request(app)
         .get('/v1/complex')
         .expect(httpStatus.OK)
-        .then((res) => {
+        .then(async (res) => {
           const complex_1 = format(dbComplex.complex_1);
           const complex_2 = format(dbComplex.complex_2);
 
@@ -68,11 +73,11 @@ describe('Complex API', async () => {
           const includesComplex_2 = some(res.body, complex_2);
 
           // before comparing it is necessary to convert String to Date
-          res.body[0].createdAt = new Date(res.body[0].createdAt);
-          res.body[1].createdAt = new Date(res.body[1].createdAt);
+          // res.body[0].createdAt = new Date(res.body[0].createdAt);
+          // res.body[1].createdAt = new Date(res.body[1].createdAt);
 
-          expect(res.body).to.be.an('array');
-          // expect(res.body).to.have.lengthOf(2);
+          expect(res.body.data).to.be.an('array');
+          expect(res.body).to.have.lengthOf(2);
           expect(includesComplex_1).to.be.true;
           expect(includesComplex_2).to.be.true;
         });
