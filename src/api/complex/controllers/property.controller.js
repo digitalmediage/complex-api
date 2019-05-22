@@ -10,7 +10,6 @@ const parseQuery = require('./../../utils/parseQuery');
 const APIError = require('../../utils/APIError');
 
 exports.getProperties = (req, res, next) => {
-
   // eslint-disable-next-line prefer-destructuring
   const query = req.query;
 
@@ -45,16 +44,17 @@ exports.getProperties = (req, res, next) => {
 exports.createProperty = (req, res, next) => {
   Property.create(req.body, (err, property) => {
     if (err) {
+      res.status(httpStatus.BAD_GATEWAY);
       res.json({
         error: err,
       });
+    } else {
+      res.status(httpStatus.OK);
+      res.json({
+        data: property,
+        message: 'Property created successfully',
+      });
     }
-
-    res.json({
-      data: property,
-      message: 'Property created successfully',
-      status: 201,
-    });
   });
 };
 
