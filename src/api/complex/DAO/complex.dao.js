@@ -5,16 +5,17 @@ const mongoose = require('mongoose');
 const complexSchema = require('./../models/complex.model');
 
 // Utility
-const list = require('./../../utils/paginationFilter');
+const { listComplex } = require('./../../utils/paginationFilter');
 
 complexSchema.statics = {
 
   async get(query, cb, options) {
-    await list(query, cb, options.page, options.perPage, this);
+    await listComplex(query, cb, options.page, options.perPage, this);
   },
 
   async getById(id, cb) {
-    await this.findOne({ _id: id }, cb);
+    await this.findOne({ _id: id }, cb)
+      .populate('properties');
   },
 
   async create(data, cb) {

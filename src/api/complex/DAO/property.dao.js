@@ -1,17 +1,34 @@
 const mongoose = require('mongoose');
 const PropertySchema = require('./../models/property.model');
 
-const list = require('./../../utils/paginationFilter');
+const { listProperty } = require('./../../utils/paginationFilter');
 
 PropertySchema.statics = {
 
-  async get(query, cb, options) {
-    await list(query, cb, options.page, options.perPage, this);
+  async create(data, cb) {
+    const property = new this(data);
+    await property.save(cb);
   },
 
-  create(data, cb) {
-    const property = new this(data);
-    property.save(cb);
+  async get(query, cb, options) {
+    await listProperty(query, cb, options.page, options.perPage, this);
+  },
+
+  async getById(id, cb) {
+    await this.findOne({ _id: id }, cb)
+      .populate('complex');
+  },
+
+  async update(query, updateData, cb) {
+    await this.findOneAndUpdate(query, {
+      $set: updateData,
+    }, {
+      new: true,
+    }, cb);
+  },
+
+  async delete(query, cb) {
+    await this.findOneAndDelete(query, cb);
   },
 
   get_complex(query, cb) {

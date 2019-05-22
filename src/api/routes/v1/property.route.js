@@ -37,7 +37,9 @@ router
   .post(propertyController.createProperty);
 
 router
-  .route('/p')
+  .route('/complex/:id')
   .get(propertyController.getComplex);
+
+router.get('/:id', propertyController.GetComplexById);
 
 module.exports = router;

@@ -58,8 +58,51 @@ exports.createProperty = (req, res, next) => {
   });
 };
 
+exports.GetComplexById = (req, res, next) => {
+  // eslint-disable-next-line prefer-const
+  let queryId = {};
+  const PropertyId = req.params.id;
+  if (!PropertyId || PropertyId !== null || PropertyId !== '') {
+    // eslint-disable-next-line dot-notation
+    queryId['_id'] = PropertyId;
+  } else {
+    throw new APIError({
+      message: ' property id not exist ',
+      status: httpStatus.CONFLICT,
+    });
+  }
+  Property.getById(queryId, (err, property) => {
+    if (err) {
+      res.status(httpStatus.BAD_GATEWAY);
+      res.json({
+        error: err,
+      });
+    } else {
+      res.status(httpStatus.OK);
+      res.json({
+        message: 'get specific property by id',
+        data: property,
+      });
+    }
+  });
+};
+
 exports.getComplex = (req, res, next) => {
-  Property.get_complex({}, (err, complex) => {
+  console.log('query');
+  // eslint-disable-next-line prefer-const
+  let query = {};
+  console.log(query);
+  console.log('query');
+  const complexId = req.params.id;
+  console.log(complexId);
+  if (!complexId || complexId !== null || complexId !== '') {
+    // eslint-disable-next-line radix
+    query['_id'] = complexId;
+    console.log('query');
+    console.log(query);
+    console.log('query');
+  }
+  Property.get_complex(query, (err, complex) => {
     if (err) {
       res.json({
         error: err,

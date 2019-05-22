@@ -27,10 +27,10 @@ const complexSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  properties: {
-    type: [mongoose.Schema.Types.ObjectId],
+  properties: [{
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Property',
-  },
+  }],
   manager: {
     current_manager: mongoose.Schema.Types.ObjectId,
     history: [mongoose.Schema.Types.ObjectId],
