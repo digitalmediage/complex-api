@@ -7,8 +7,10 @@ const chargeSchema = new mongoose.Schema({
   user: {
     type: objectId,
   },
+  name: String,
   charge_price: desimal,
   amount: desimal,
+  charge_date: Date,
   property: objectId,
   comment: String,
   notify_status: Boolean,
