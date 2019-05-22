@@ -95,6 +95,7 @@ exports.getDeveloperComplex = (req, res, next) => {
     });
   }
 
+  // eslint-disable-next-line dot-notation
   parsedQuery['developer'] = req.params.developer;
 
   // eslint-disable-next-line prefer-const
@@ -122,6 +123,19 @@ exports.getDeveloperComplex = (req, res, next) => {
   }, options);
 };
 
+
+exports.test = (req, res, next) => {
+  ComplexModel.testo({}, (err, complex) => {
+    if (err) {
+      console.log(err);
+      res.end(err);
+    }
+    console.log(complex);
+    res.json({
+      data: complex,
+    });
+  });
+};
 
 // exports.getDeveloperComplexByFilter = (req, res, next) => {
 //   const nameFilter = req.query.name;
@@ -158,14 +172,15 @@ exports.getDeveloperComplex = (req, res, next) => {
 exports.getComplexById = (req, res, next) => {
   ComplexModel.getById(req.params.id, (err, complex) => {
     if (err) {
+      res.status(httpStatus.BAD_GATEWAY);
       res.json({
         error: err,
       });
     } else {
+      res.status(httpStatus.OK);
       res.json({
         message: 'Get complex',
         data: complex,
-        status: 200,
       });
     }
   });
@@ -181,14 +196,15 @@ exports.updateComplex = (req, res, next) => {
     _id: req.params.id,
   }, req.body, (err, complex) => {
     if (err) {
+      res.status(httpStatus.BAD_GATEWAY);
       res.json({
         error: err,
       });
     } else {
+      res.status(httpStatus.OK);
       res.json({
         message: 'Update complex',
         data: complex,
-        status: 200,
       });
     }
   });
@@ -200,14 +216,15 @@ exports.removeComplex = (req, res, next) => {
     _id: req.params.id,
   }, (err, complex) => {
     if (err) {
+      res.status(httpStatus.BAD_GATEWAY);
       res.json({
         error: err,
       });
     } else {
+      res.status(httpStatus.BAD_GATEWAY);
       res.json({
         message: 'Complex removed successfully',
         data: complex,
-        status: 202,
       });
     }
   });

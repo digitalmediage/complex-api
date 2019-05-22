@@ -10,7 +10,7 @@ const {
   omitBy,
   isNil,
 } = require('lodash');
-const sinon = require('sinon');
+// const sinon = require('sinon');
 
 const app = require('./../../index');
 

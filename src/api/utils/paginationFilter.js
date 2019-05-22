@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 
 
 const list = (

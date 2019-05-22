@@ -33,6 +33,12 @@ complexSchema.statics = {
   async delete(query, cb) {
     await this.findOneAndDelete(query, cb);
   },
+
+  async testo(query, cb) {
+    await this.aggregate([
+      { $match: { } },
+    ], cb);
+  },
 };
 
 

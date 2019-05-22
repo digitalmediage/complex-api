@@ -10,7 +10,7 @@ exports.getPayments = (req, res, next) => {
 
     res.json({
       data: payment,
-      status: 200
+      status: 200,
     });
   });
 };

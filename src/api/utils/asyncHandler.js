@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 const awaitHandlerFactory = (middleware) => {
   return async (req, res, next) => {
     try {

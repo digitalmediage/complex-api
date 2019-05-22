@@ -3,13 +3,15 @@
 const express = require('express');
 const validate = require('express-validation');
 
-// Controller 
+// Controller
 const complexController = require('./../../complex/controllers/complex.controller');
 
 // Validator
 const {
+  createComplex,
   listComplex,
   listDeveloperComplex,
+  updateComplex,
 } = require('./../../complex/validation/complex.validation');
 
 const router = express.Router();
@@ -45,7 +47,7 @@ router
    * @apiSuccess {Object[]} users List of users.
    *
    */
-  .post(complexController.createComplex);
+  .post(validate(createComplex), complexController.createComplex);
 
 /**
  * @api {get} v1/complex/:id get Complex
@@ -62,12 +64,12 @@ router
  *
  */
 router.get('/developer/:developer', validate(listDeveloperComplex), complexController.getDeveloperComplex);
-
+router.get('/test', complexController.test);
 router
   .route('/:id')
 
   .get(complexController.getComplexById)
-  .put(complexController.updateComplex)
+  .put(validate(updateComplex), complexController.updateComplex)
   .delete(complexController.removeComplex);
 
 

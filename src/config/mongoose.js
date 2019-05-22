@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const logger = require('./../config/logger');
+// eslint-disable-next-line no-unused-vars
 const { mongo, env } = require('./vars');
 
 // set mongoose Promise to Bluebird
