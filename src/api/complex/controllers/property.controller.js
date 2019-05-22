@@ -115,3 +115,51 @@ exports.getComplex = (req, res, next) => {
     });
   });
 };
+
+exports.updateProperty = (req, res, next) => {
+  if (!req.params.id || req.params.id === null || req.params.id === '') {
+    throw new APIError({
+      message: ' image not uploaded ',
+      status: httpStatus.CONFLICT,
+    });
+  }
+
+  const propertyId = req.params.id;
+  console.log('params');
+  console.log(propertyId);
+
+  Property.update({ _id: propertyId }, req.body, (err, property) => {
+    if (err) {
+      res.status(httpStatus.BAD_GATEWAY);
+      res.json({
+        error: err,
+      });
+    } else {
+      res.status(httpStatus.OK);
+      res.json({
+        message: 'Update property',
+        data: property,
+      });
+    }
+  });
+};
+
+
+exports.removeComplex = (req, res, next) => {
+  Property.delete({
+    _id: req.params.id,
+  }, (err, property) => {
+    if (err) {
+      res.status(httpStatus.BAD_GATEWAY);
+      res.json({
+        error: err,
+      });
+    } else {
+      res.status(httpStatus.BAD_GATEWAY);
+      res.json({
+        message: 'property removed successfully',
+        data: property,
+      });
+    }
+  });
+};

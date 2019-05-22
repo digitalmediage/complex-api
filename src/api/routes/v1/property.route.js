@@ -36,10 +36,13 @@ router
    */
   .post(propertyController.createProperty);
 
-router
-  .route('/complex/:id')
-  .get(propertyController.getComplex);
+// router
+//   .route('/complex/:id')
+//   .get(propertyController.getComplex);
 
-router.get('/:id', propertyController.GetComplexById);
+router
+  .route('/:id')
+  .get(propertyController.GetComplexById)
+  .put(propertyController.updateProperty);
 
 module.exports = router;
