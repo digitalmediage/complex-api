@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable prefer-destructuring */
 
-// 3d-party Dependencies
+// Core main module dependency
 const httpStatus = require('http-status');
 
 // Models

@@ -1,6 +1,11 @@
+// Core main module dependency
 const mongoose = require('mongoose');
-const MediaModel = require('./../models/media.model');
 const httpStatus = require('http-status');
+
+// Model
+const MediaModel = require('./../models/media.model');
+
+// Utility
 const APIError = require('../../utils/APIError');
 
 

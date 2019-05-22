@@ -1,3 +1,4 @@
+// Core main module dependency
 const mongoose = require('mongoose');
 
 // eslint-disable-next-line prefer-destructuring
@@ -65,5 +66,19 @@ const propertySchema = new mongoose.Schema({
 }, {
   timestamps: true,
 });
+
+/**
+ * Add your
+ * - pre-save hooks
+ * - validations
+ * - virtuals
+ */
+propertySchema.index({
+  '$**': 'text',
+});
+
+// propertySchema.pre('save', async function save(next) {
+
+// });
 
 module.exports = propertySchema;
