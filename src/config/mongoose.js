@@ -20,6 +20,7 @@ if (env === 'development') {
 /**
 * Connect to mongo db
 * mongodb + srv: //root:root@cluster0-avr8o.gcp.mongodb.net/test?retryWrites=true
+* mongodb: //mongodb:27017/complex
 * @returns {object} Mongoose connection
 * @public
 */
@@ -28,7 +29,7 @@ exports.connect = () => {
   console.log(mongo);
   console.log(typeof mongo);
   console.log('mongooose type uri + => ');
-  mongoose.connect('mongodb://mongodb:27017/complex', {
+  mongoose.connect('mongodb+srv://root:root@cluster0-avr8o.gcp.mongodb.net/test?retryWrites=true', {
     keepAlive: 1,
     useNewUrlParser: true,
     useCreateIndex: true,

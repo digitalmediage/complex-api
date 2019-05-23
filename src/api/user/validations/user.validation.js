@@ -3,7 +3,7 @@ const User = require('./../models/user.model');
 
 module.exports = {
 
-  // GET /v1/usersuser.model
+  // GET /v1/users user.model
   listUsers: {
     query: {
       page: Joi.number().min(1),

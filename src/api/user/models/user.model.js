@@ -11,7 +11,11 @@ const { env, jwtSecret, jwtExpirationInterval } = require('../../../config/vars'
 /**
 * User Roles
 */
-const roles = ['user', 'admin'];
+const roles = ['user', 'developer', 'admin'];
+
+// helper
+// eslint-disable-next-line prefer-destructuring
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 /**
  * User Schema
@@ -50,6 +54,33 @@ const userSchema = new mongoose.Schema({
   picture: {
     type: String,
     trim: true,
+  },
+  developer: {
+    complex: [{
+      type: ObjectId,
+      ref: 'Complex',
+    }],
+    property: [{
+      type: ObjectId,
+      ref: 'Property',
+    }],
+  },
+  user: {
+    property: [{
+      type: ObjectId,
+      ref: 'Property',
+    }],
+    fav_property: [{
+      type: ObjectId,
+      ref: 'Property',
+    }],
+  },
+  manager: {
+    complex: [{
+      type: ObjectId,
+      ref: 'Complex',
+    }],
+    activation: Boolean,
   },
 }, {
   timestamps: true,
