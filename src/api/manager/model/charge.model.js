@@ -6,12 +6,16 @@ const desimal = mongoose.Schema.Types.Decimal128;
 const chargeSchema = new mongoose.Schema({
   user: {
     type: objectId,
+    ref: 'User',
   },
   name: String,
   charge_price: desimal,
   amount: desimal,
   charge_date: Date,
-  property: objectId,
+  property: {
+    type: objectId,
+    ref: 'Property',
+  },
   comment: String,
   notify_status: Boolean,
 }, {
