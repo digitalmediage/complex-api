@@ -25,6 +25,11 @@ router
 
   .post(chargeController.CreateCharge);
 
+router
+  .route('/charge/:id')
+  .put(chargeController.updateCharge)
+  .delete(chargeController.removeComplex);
+
 
 router
   .route('/payment')

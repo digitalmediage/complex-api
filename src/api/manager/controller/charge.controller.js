@@ -57,3 +57,64 @@ exports.GetCharge = (req, res, next) => {
     }
   }, options);
 };
+
+
+exports.updateCharge = (req, res, next) => {
+  // TODO implement req.body validation
+  // const _complex = {
+  //   complex_name: req.body.complex_name,
+  // };
+
+  if (!req.params.id || req.params.id === null || req.params.id === '') {
+    throw new APIError({
+      message: ' id not exist ',
+      status: httpStatus.CONFLICT,
+    });
+  }
+
+  const propertyId = req.params.id;
+
+  chargeModel.update({
+    _id: propertyId,
+  }, req.body, (err, complex) => {
+    if (err) {
+      res.status(httpStatus.BAD_GATEWAY);
+      res.json({
+        error: err,
+      });
+    } else {
+      res.status(httpStatus.OK);
+      res.json({
+        message: 'Update charge',
+        data: complex,
+      });
+    }
+  });
+};
+
+exports.removeComplex = (req, res, next) => {
+  if (!req.params.id || req.params.id === null || req.params.id === '') {
+    throw new APIError({
+      message: ' id not exist ',
+      status: httpStatus.CONFLICT,
+    });
+  }
+
+  const propertyId = req.params.id;
+  chargeModel.delete({
+    _id: propertyId,
+  }, (err, charge) => {
+    if (err) {
+      res.status(httpStatus.BAD_GATEWAY);
+      res.json({
+        error: err,
+      });
+    } else {
+      res.status(httpStatus.OK);
+      res.json({
+        message: 'Charge removed successfully',
+        data: charge,
+      });
+    }
+  });
+};

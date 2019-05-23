@@ -221,7 +221,7 @@ exports.removeComplex = (req, res, next) => {
         error: err,
       });
     } else {
-      res.status(httpStatus.BAD_GATEWAY);
+      res.status(httpStatus.OK);
       res.json({
         message: 'Complex removed successfully',
         data: complex,

@@ -5,17 +5,32 @@ const mongoose = require('mongoose');
 const chargeSchema = require('./../model/charge.model');
 
 // Utility
-const { listCharge } = require('./../../utils/paginationFilter');
+const {
+  listCharge
+} = require('./../../utils/paginationFilter');
 
 chargeSchema.statics = {
-  create(data, cb) {
+  async create(data, cb) {
     const charge = new this(data);
-    charge.save(cb);
+    await charge.save(cb);
   },
 
   async get(query, cb, options) {
     await listCharge(query, cb, options.page, options.perPage, this);
   },
+
+  async update(query, updateData, cb) {
+    await this.findOneAndUpdate(query, {
+      $set: updateData,
+    }, {
+      new: true,
+    }, cb);
+  },
+
+  async delete(query, cb) {
+    await this.findOneAndDelete(query, cb);
+  },
+
 };
 
 

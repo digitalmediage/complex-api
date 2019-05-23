@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const paymentModel = require('./../model/payment.model');
 
+const { listPayment } = require('./../../utils/paginationFilter');
+
 paymentModel.statics = {
   async create(data, cb) {
     const payment = await new this(data);
@@ -8,7 +10,7 @@ paymentModel.statics = {
   },
 
   async get(query, cb) {
-    await this.find(query, cb);
+    await listPayment(query, cb, options.page, options.perPage, this);
   },
 };
 
