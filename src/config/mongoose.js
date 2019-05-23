@@ -28,7 +28,7 @@ exports.connect = () => {
   console.log(mongo);
   console.log(typeof mongo);
   console.log('mongooose type uri + => ');
-  mongoose.connect('mongodb: //mongodb:27017/complex', {
+  mongoose.connect('mongodb://mongodb:27017/complex', {
     keepAlive: 1,
     useNewUrlParser: true,
     useCreateIndex: true,
