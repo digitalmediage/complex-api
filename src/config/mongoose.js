@@ -24,7 +24,11 @@ if (env === 'development') {
 * @public
 */
 exports.connect = () => {
-  mongoose.connect(mongo, {
+  console.log('mongooose type uri + => ');
+  console.log(mongo);
+  console.log(typeof mongo);
+  console.log('mongooose type uri + => ');
+  mongoose.connect('mongodb: //mongodb:27017/complex', {
     keepAlive: 1,
     useNewUrlParser: true,
     useCreateIndex: true,
