@@ -19,12 +19,12 @@ if (env === 'development') {
 
 /**
 * Connect to mongo db
-*
+* mongodb + srv: //root:root@cluster0-avr8o.gcp.mongodb.net/test?retryWrites=true
 * @returns {object} Mongoose connection
 * @public
 */
 exports.connect = () => {
-  mongoose.connect('mongodb+srv://root:root@cluster0-avr8o.gcp.mongodb.net/test?retryWrites=true', {
+  mongoose.connect(mongo, {
     keepAlive: 1,
     useNewUrlParser: true,
     useCreateIndex: true,
