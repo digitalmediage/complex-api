@@ -4,6 +4,7 @@ const httpStatus = require('http-status');
 
 // Model
 const MediaModel = require('./../models/media.model');
+const UserModel = require('./../../user/models/user.model');
 
 // Utility
 const APIError = require('../../utils/APIError');
@@ -91,27 +92,35 @@ complexSchema.pre('save', async function save(next) {
 
     // check if image_map not exist in media database
     // logic => image not uploaded, id not exist
-    const checkUploadFileExisted = async (path) => {
-      console.log('path');
-      console.log(path);
-      console.log('path');
-      const uploadFile = await MediaModel.find({
-        _id: path,
-      });
+    const checkExistedObjectIdAtDocument =
+    async (pathId, model, query = null, errMeesage = 'Internal Error') => {
+      let queryObj;
+      if (query) {
+        queryObj = Object.assign({ _id: pathId }, query);
+        console.log(queryObj);
+      } else {
+        queryObj = { _id: pathId };
+      }
+      const uploadFile = await model.find(queryObj);
       console.log(uploadFile.length);
       console.log('developer');
 
       if (uploadFile.length === 0) {
         throw new APIError({
-          message: ' image not uploaded ',
+          message: errMeesage,
           status: httpStatus.CONFLICT,
         });
       }
     };
 
     if (this.map_image && this.map_image !== null) {
-      await checkUploadFileExisted(this.map_image);
+      await checkExistedObjectIdAtDocument(this.map_image, MediaModel, null, 'image file not exist');
       console.log('map_image if block');
+    }
+
+    if (this.developer && this.developer !== null) {
+      await checkExistedObjectIdAtDocument(this.developer, UserModel, { role: 'developer' }, 'developer not exist');
+      console.log('developer if block');
     }
 
 
