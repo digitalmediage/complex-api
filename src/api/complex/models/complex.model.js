@@ -91,17 +91,27 @@ complexSchema.pre('save', async function save(next) {
 
     // check if image_map not exist in media database
     // logic => image not uploaded, id not exist
-    const developer = await MediaModel.find({
-      _id: this.map_image,
-    });
-    console.log(developer.length);
-    console.log('developer');
-
-    if (developer.length === 0) {
-      throw new APIError({
-        message: ' image not uploaded ',
-        status: httpStatus.CONFLICT,
+    const checkUploadFileExisted = async (path) => {
+      console.log('path');
+      console.log(path);
+      console.log('path');
+      const uploadFile = await MediaModel.find({
+        _id: path,
       });
+      console.log(uploadFile.length);
+      console.log('developer');
+
+      if (uploadFile.length === 0) {
+        throw new APIError({
+          message: ' image not uploaded ',
+          status: httpStatus.CONFLICT,
+        });
+      }
+    };
+
+    if (this.map_image && this.map_image !== null) {
+      await checkUploadFileExisted(this.map_image);
+      console.log('map_image if block');
     }
 
 
