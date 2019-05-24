@@ -19,7 +19,9 @@ const APIError = require('../../utils/APIError');
  */
 
 exports.createComplex = (req, res, next) => {
-  ComplexModel.create(req.body, (err, complex) => {
+  const user = req.user.transform();
+  const query = Object.assign({ developer: user.id }, req.body);
+  ComplexModel.create(query, (err, complex) => {
     if (err) {
       res.status(httpStatus.BAD_GATEWAY);
       res.json({

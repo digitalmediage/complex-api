@@ -2,6 +2,7 @@
 // Main Module Dependency
 const express = require('express');
 const validate = require('express-validation');
+const { authorize, ADMIN, LOGGED_USER } = require('../../middlewares/auth');
 
 // Controller
 const complexController = require('./../../complex/controllers/complex.controller');
@@ -47,7 +48,7 @@ router
    * @apiSuccess {Object[]} users List of users.
    *
    */
-  .post(validate(createComplex), complexController.createComplex);
+  .post(authorize(), validate(createComplex), complexController.createComplex);
 
 /**
  * @api {get} v1/complex/:id get Complex
