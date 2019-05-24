@@ -1,5 +1,6 @@
 const express = require('express');
 const propertyController = require('./../../complex/controllers/property.controller');
+const { authorize, ADMIN, LOGGED_USER } = require('../../middlewares/auth');
 
 const router = express.Router();
 
@@ -34,7 +35,7 @@ router
    * @apiSuccess {Object[]} users List of Property.
    *
    */
-  .post(propertyController.createProperty);
+  .post(authorize(ADMIN), propertyController.createProperty);
 
 // router
 //   .route('/complex/:id')
@@ -43,6 +44,7 @@ router
 router
   .route('/:id')
   .get(propertyController.GetComplexById)
-  .put(propertyController.updateProperty);
+  .put(authorize(ADMIN), propertyController.updateProperty)
+  .delete(authorize(ADMIN), propertyController.removeComplex);
 
 module.exports = router;

@@ -9,6 +9,7 @@ const managerRoutes = require('./manager.route');
 const uploadRoutes = require('./upload.route');
 const sampleRoutes = require('./sample.route');
 const newsRoutes = require('./news.route');
+const developerRoutes = require('./developer.route');
 
 const router = express.Router();
 
@@ -30,6 +31,7 @@ router.use('/upload', uploadRoutes);
 router.use('/manager', managerRoutes);
 router.use('/test', sampleRoutes);
 router.use('/news', newsRoutes);
+router.use('/developer', developerRoutes);
 
 
 module.exports = router;

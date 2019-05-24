@@ -11,7 +11,7 @@ const { env, jwtSecret, jwtExpirationInterval } = require('../../../config/vars'
 /**
 * User Roles
 */
-const roles = ['user', 'developer', 'admin'];
+const roles = ['user', 'manager', 'admin'];
 
 // helper
 // eslint-disable-next-line prefer-destructuring
@@ -55,16 +55,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-  developer: {
-    complex: [{
-      type: ObjectId,
-      ref: 'Complex',
-    }],
-    property: [{
-      type: ObjectId,
-      ref: 'Property',
-    }],
-  },
   user: {
     property: [{
       type: ObjectId,
@@ -76,10 +66,10 @@ const userSchema = new mongoose.Schema({
     }],
   },
   manager: {
-    complex: [{
+    complex: {
       type: ObjectId,
       ref: 'Complex',
-    }],
+    },
     activation: Boolean,
   },
 }, {
