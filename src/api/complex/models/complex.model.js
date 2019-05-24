@@ -27,6 +27,7 @@ const complexSchema = new mongoose.Schema({
   cadastra: String,
   developer: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true,
   },
   properties: [{

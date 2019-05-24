@@ -15,7 +15,8 @@ complexSchema.statics = {
 
   async getById(id, cb) {
     await this.findOne({ _id: id }, cb)
-      .populate('properties');
+      .populate('properties')
+      .populate('developer', 'email name developer picture');
   },
 
   async create(data, cb) {
