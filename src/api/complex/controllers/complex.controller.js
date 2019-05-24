@@ -10,6 +10,7 @@ const ComplexModel = require('./../DAO/complex.dao');
 // Utility
 const parseQuery = require('./../../utils/parseQuery');
 const APIError = require('../../utils/APIError');
+const { omit } = require('lodash');
 
 
 /**
@@ -194,9 +195,11 @@ exports.updateComplex = (req, res, next) => {
   //   complex_name: req.body.complex_name,
   // };
 
+  const query = omit(req.body, 'developer');
+
   ComplexModel.update({
     _id: req.params.id,
-  }, req.body, (err, complex) => {
+  }, query, (err, complex) => {
     if (err) {
       res.status(httpStatus.BAD_GATEWAY);
       res.json({

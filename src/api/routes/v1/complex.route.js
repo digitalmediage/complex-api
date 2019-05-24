@@ -48,7 +48,7 @@ router
    * @apiSuccess {Object[]} users List of users.
    *
    */
-  .post(authorize(), validate(createComplex), complexController.createComplex);
+  .post(authorize(ADMIN), validate(createComplex), complexController.createComplex);
 
 /**
  * @api {get} v1/complex/:id get Complex
@@ -70,8 +70,8 @@ router
   .route('/:id')
 
   .get(complexController.getComplexById)
-  .put(validate(updateComplex), complexController.updateComplex)
-  .delete(complexController.removeComplex);
+  .put(authorize(ADMIN), validate(updateComplex), complexController.updateComplex)
+  .delete(authorize(ADMIN), complexController.removeComplex);
 
 
 module.exports = router;

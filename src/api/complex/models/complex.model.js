@@ -102,7 +102,7 @@ complexSchema.pre('save', async function save(next) {
 
     if (this.developer && this.developer !== null) {
       await checkExistedObjectIdAtDocument(this.developer, UserModel, {
-        role: 'developer'
+        role: 'admin',
       }, 'developer not exist');
       console.log('developer if block');
     }
