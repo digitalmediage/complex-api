@@ -117,9 +117,9 @@ exports.setPermishion = async (req, res, next) => {
           from: 'complex',
           to: req.body.email,
           // eslint-disable-next-line prefer-template
-          subject: ` Invite From ${user.name || ''} , ${complex.name ? 'for' + complex.name + ' complex' : ''}`,
+          subject: ` Invite From ${user.name || ''} , ${complex.name ? 'for ' + complex.name + ' complex' : ''}`,
           text: `you must sign in at complex website and continue for registrations
-              your username is your email address and your first use password is $ {randomstring}`,
+              your username is your email address and your first use password is ${randomstring}`,
         };
         let newManagerData = {};
         // create new manager instance for update complex  

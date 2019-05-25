@@ -10,6 +10,7 @@ const uploadRoutes = require('./upload.route');
 const sampleRoutes = require('./sample.route');
 const newsRoutes = require('./news.route');
 const developerRoutes = require('./developer.route');
+const chatRoutes = require('./chat.route');
 
 const router = express.Router();
 
@@ -32,6 +33,7 @@ router.use('/manager', managerRoutes);
 router.use('/test', sampleRoutes);
 router.use('/news', newsRoutes);
 router.use('/developer', developerRoutes);
+router.use('/chat', chatRoutes);
 
 
 module.exports = router;
