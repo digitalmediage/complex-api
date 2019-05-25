@@ -55,6 +55,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
   user: {
     property: [{
       type: ObjectId,
