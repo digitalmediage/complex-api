@@ -23,31 +23,134 @@ exports.getPayments = (req, res, next) => {
 
   paymentModel.get(parsedQuery, (err, payment) => {
     if (err) {
+      res.status(httpStatus.BAD_GATEWAY);
       res.json({
         error: err,
       });
+    } else {
+      res.status(httpStatus.OK);
+      res.json({
+        data: payment,
+      });
     }
-
-    res.json({
-      data: payment,
-    });
   }, options);
 };
 
 
 exports.createPayment = (req, res, next) => {
+  if (req.user.role && req.user.role !== 'manager') {
+    throw new APIError({
+      message: 'user permission error',
+      status: httpStatus.CONFLICT,
+    });
+  }
   paymentModel.create(req.body, (err, payment) => {
     if (err) {
+      res.status(httpStatus.BAD_GATEWAY);
       res.json({
         error: err,
       });
+    } else {
+      res.status(httpStatus.OK);
+      res.json({
+        data: payment,
+        message: 'payment created successfully',
+      });
     }
-
-    res.json({
-      data: payment,
-      message: 'payment created successfully',
-      status: 201,
-    });
   });
 };
 
+exports.getPaymentById = (req, res, next) => {
+  if (!req.params.id || req.params.id === null || req.params.id === undefined) {
+    throw new APIError({
+      message: ' payment not exist ',
+      status: httpStatus.CONFLICT,
+    });
+  }
+  paymentModel.getById(req.params.id, (err, payment) => {
+    if (err) {
+      res.status(httpStatus.BAD_GATEWAY);
+      res.json({
+        error: err,
+      });
+    } else {
+      res.status(httpStatus.OK);
+      res.json({
+        message: 'Get Payment',
+        data: payment,
+      });
+    }
+  });
+};
+
+exports.updatePayment = (req, res, next) => {
+  // TODO implement req.body validation
+  // const _complex = {
+  //   complex_name: req.body.complex_name,
+  // };
+  if (!req.params.id || req.params.id === null || req.params.id === undefined) {
+    throw new APIError({
+      message: ' payment not exist ',
+      status: httpStatus.CONFLICT,
+    });
+  }
+
+  if (req.user.role && req.user.role !== 'manager') {
+    throw new APIError({
+      message: 'user permission error manager',
+      status: httpStatus.CONFLICT,
+    });
+  }
+  const query = req.body;
+
+  paymentModel.update({
+    _id: req.params.id,
+  }, query, (err, payment) => {
+    if (err) {
+      res.status(httpStatus.BAD_GATEWAY);
+      res.json({
+        error: err,
+      });
+    } else {
+      res.status(httpStatus.OK);
+      res.json({
+        message: 'Update payment',
+        data: payment,
+      });
+    }
+  });
+};
+
+
+exports.removePayment = (req, res, next) => {
+  if (!req.params.id || req.params.id === null || req.params.id === undefined) {
+    throw new APIError({
+      message: ' payment not exist ',
+      status: httpStatus.CONFLICT,
+    });
+  }
+
+  if (req.user.role && req.user.role !== 'manager') {
+    throw new APIError({
+      message: 'user permission error manager',
+      status: httpStatus.CONFLICT,
+    });
+  }
+
+  paymentModel.delete({
+    _id: req.params.id,
+  }, (err, payment) => {
+    if (err) {
+      res.status(httpStatus.BAD_GATEWAY);
+      res.json({
+        error: err,
+      });
+    } else {
+      res.status(httpStatus.OK);
+      res.json({
+        message: 'Payment removed successfully',
+        data: payment,
+      });
+    }
+  });
+};

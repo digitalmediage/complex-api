@@ -8,8 +8,14 @@ const chargeSchema = new mongoose.Schema({
     type: objectId,
     ref: 'User',
   },
-  name: String,
-  charge_price: desimal,
+  name: {
+    type: String,
+    required: true,
+  },
+  charge_price: {
+    type: desimal,
+    required: true,
+  },
   amount: desimal,
   charge_date: Date,
   property: {

@@ -12,6 +12,13 @@ const APIError = require('../../utils/APIError');
 
 
 exports.CreateCharge = (req, res, next) => {
+  if (req.user.role && req.user.role !== 'manager') {
+    throw new APIError({
+      message: 'user permission error manager',
+      status: httpStatus.CONFLICT,
+    });
+  }
+
   chargeModel.create(req.body, (err, charge) => {
     if (err) {
       res.status(httpStatus.BAD_GATEWAY);
@@ -71,6 +78,12 @@ exports.updateCharge = (req, res, next) => {
       status: httpStatus.CONFLICT,
     });
   }
+  if (req.user.role && req.user.role !== 'manager') {
+    throw new APIError({
+      message: 'user permission error manager',
+      status: httpStatus.CONFLICT,
+    });
+  }
 
   const propertyId = req.params.id;
 
@@ -96,6 +109,13 @@ exports.removeComplex = (req, res, next) => {
   if (!req.params.id || req.params.id === null || req.params.id === '') {
     throw new APIError({
       message: ' id not exist ',
+      status: httpStatus.CONFLICT,
+    });
+  }
+
+  if (req.user.role && req.user.role !== 'manager') {
+    throw new APIError({
+      message: 'user permission error manager',
       status: httpStatus.CONFLICT,
     });
   }
