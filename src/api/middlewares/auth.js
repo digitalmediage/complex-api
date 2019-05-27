@@ -4,6 +4,7 @@ const User = require('../user/models/user.model');
 const APIError = require('../utils/APIError');
 
 const ADMIN = 'admin';
+const MANAGER = 'manager';
 const LOGGED_USER = '_loggedUser';
 
 const handleJWT = (req, res, next, roles) => async (err, user, info) => {
@@ -17,6 +18,7 @@ const handleJWT = (req, res, next, roles) => async (err, user, info) => {
 
   try {
     if (error || !user) throw error;
+    if (!user.isVerified) throw error;
     await logIn(user, { session: false });
   } catch (e) {
     return next(apiError);
@@ -43,6 +45,7 @@ const handleJWT = (req, res, next, roles) => async (err, user, info) => {
 
 exports.ADMIN = ADMIN;
 exports.LOGGED_USER = LOGGED_USER;
+exports.MANAGER = MANAGER;
 
 exports.authorize = (roles = User.roles) => (req, res, next) =>
   passport.authenticate(
