@@ -31,6 +31,7 @@ function generateTokenResponse(user, accessToken) {
 
 /**
  * Verification user by email
+ *
  * @public
  */
 
@@ -182,57 +183,6 @@ exports.login = async (req, res, next) => {
   }
 };
 
-
-/**
- * Returns jwt token if valid username and password is provided
- * @public
- */
-exports.login_ = async (req, res, next) => {
-  const emailAddress = req.body.email;
-  if (emailAddress) {
-    await User.find({
-      email: emailAddress,
-    }, async (err, _user_) => {
-      if (_user_.length === 0) {
-        res.status(httpStatus.CONFLICT);
-        res.json({
-          type: 'user-no-exist',
-          message: 'User not exist',
-        });
-        return;
-      }
-
-      if (!_user_[0].isVerified) {
-        // User not Verified by email
-        res.json({
-          type: 'not-verified',
-          message: 'Your account has not been verified',
-        });
-      } else {
-        try {
-          const {
-            user,
-            accessToken,
-          } = await User.findAndGenerateToken(req.body);
-          const token = generateTokenResponse(user, accessToken);
-          const userTransformed = user.transform();
-          res.json({
-            token,
-            user: userTransformed,
-          });
-        } catch (error) {
-          next(error);
-        }
-      }
-    });
-  } else {
-    // Request without email
-    throw new APIError({
-      message: ' request without email ',
-      status: httpStatus.CONFLICT,
-    });
-  }
-};
 
 /**
  * login with an existing user or creates a new one if valid accessToken token
