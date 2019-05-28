@@ -25,8 +25,6 @@ if (env === 'development') {
 * @public
 */
 exports.connect = () => {
-  console.log(mongo);
-  console.log(typeof mongo);
   mongoose.connect('mongodb://localhost:27017/complex', {
     keepAlive: 1,
     useNewUrlParser: true,

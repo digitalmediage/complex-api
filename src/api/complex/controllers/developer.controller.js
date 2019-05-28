@@ -4,6 +4,9 @@ const httpStatus = require('http-status');
 // Utility
 const APIError = require('../../utils/APIError');
 const transporter = require('./../../utils/mailHandler');
+const {
+  checkExistedObjectIdAtDocument,
+} = require('./../../utils/ModelHelper');
 
 // Model
 // TODO set checking for exist picture and complex
@@ -12,171 +15,117 @@ const complexModel = require('./../DAO/complex.dao');
 // const media = require('./../../complex/models/media.model');
 
 
-// const getSpecificComplex = async (req) => {
-//     const complexById_;
-//   await complexModel.findById(req.body.complex)
-//     .then((err, complex_) => {
-//       if (err) {
-//         throw new APIError({
-//           message: `database Error ${err}`,
-//           status: httpStatus.CONFLICT,
-//         });
-//       } else {
-//         const complexById_ = complex_;
-//       }
-//       return complexById_;
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//       throw new APIError({
-//         message: `database Error ${err}`,
-//         status: httpStatus.CONFLICT,
-//       });
-//     });
-// }
-
+// eslint-disable-next-line consistent-return
 exports.setPermishion = async (req, res, next) => {
-  let complex;
-  if (!req.body.email && req.body.email === null && req.body.email === undefined) {
-    throw new APIError({
-      message: ' email is required ',
-      status: httpStatus.GONE,
-    });
-  }
-
-  if (req.body.complex && req.body.complex !== null && req.body.complex !== undefined) {
-    try {
-      await complexModel.getById(req.body.complex, (err, complex_) => {
-        if (err) {
-          throw new APIError({
-            message: `Internal Database Error ${err}`,
-            status: httpStatus.INTERNAL_SERVER_ERROR,
-          });
-        } else {
-          complex = complex_;
-          console.log('complex');
-          console.log(complex);
-          console.log('complex');
-        }
-      });
-    } catch (err) {
-      throw new APIError({
-        message: `Internal Error ${err}`,
-        status: httpStatus.INTERNAL_SERVER_ERROR,
-      });
-    }
-  } else {
+  // Check if req whiteout complex
+  if (!req.body.complex && req.body.complex === null && req.body.complex === undefined) {
     throw new APIError({
       message: ' Complex Not exist',
       status: httpStatus.CONFLICT,
     });
   }
 
+  // Check if complex id exist in Complex Model at dataBase
+  await checkExistedObjectIdAtDocument(req.body.complex, complexModel, null, 'complex not exist');
 
-  const randomstring = Math.random().toString(36).slice(-8);
-  const user = req.user.transform();
-
-  const currentManager = complex.manager.current_manager;
-  const managerHistory = complex.manager.history;
-
-  console.log('currentManager');
-  console.log(currentManager);
-  console.log('currentManager');
-
-  console.log('managerHistory');
-  console.log(managerHistory);
-  console.log('managerHistory');
-
-
-  const requestData = {
-    email: req.body.email,
-    name: req.body.name,
-    picture: req.body.picture,
-    role: 'manager',
-    password: randomstring,
-    manager: {
-      complex: req.body.complex,
-      activation: false,
-    },
-  };
-
-  const ManagerGenerator = async (cb) => {
-    const newManager = new UserModel(requestData);
-    await newManager.save(cb);
-  };
 
   try {
-    ManagerGenerator(async (err, manager) => {
-      if (err) {
-        res.status(httpStatus.BAD_GATEWAY);
-        res.json({
-          error: err,
-        });
-      } else {
+    const user = req.user.transform();
+
+    // create  random password
+    const randomstring = Math.random().toString(36).slice(-8);
+
+    // manager data
+    const requestData = {
+      email: req.body.email,
+      name: req.body.name ? req.body.name : '',
+      picture: req.body.picture ? req.body.picture : '',
+      role: 'manager',
+      isVerified: true,
+      password: randomstring,
+      manager: {
+        complex: req.body.complex,
+        activation: false,
+      },
+    };
+
+    const newManager = new UserModel(requestData);
+    newManager.save()
+      .then(async (managerUser) => {
+        // Email configurations
         const mailOptions = {
           from: 'complex',
           to: req.body.email,
           // eslint-disable-next-line prefer-template
-          subject: ` Invite From ${user.name || ''} , ${complex.name ? 'for ' + complex.name + ' complex' : ''}`,
+          subject: ` Invite From ${user.name || ''}`,
           text: `you must sign in at complex website and continue for registrations
               your username is your email address and your first use password is ${randomstring}`,
         };
+
+        const emailRespose = await transporter.sendMail(mailOptions);
+        const emailStatus = emailRespose.response;
+
+        if (!emailStatus && !emailStatus.includes('OK')) {
+          throw new APIError({
+            message: 'Email can not send',
+            status: httpStatus.CONFLICT,
+            isPublic: true,
+          });
+        }
+
+        const complex = await complexModel.findOne({ _id: req.body.complex });
+        console.log(complex);
+        console.log('complex');
+        console.log(complex);
+
+        if (!complex) {
+          throw new APIError({
+            message: 'Complex not found',
+            status: httpStatus.CONFLICT,
+            isPublic: true,
+          });
+        }
+
+        // Get current manager and other previous
+        console.log(complex);
+        const currentManager = complex.manager.current_manager;
+        const managerHistory = complex.manager.history;
+
         let newManagerData = {};
-        // create new manager instance for update complex  
+        // create new manager instance for update complex
         if (!currentManager || currentManager === null || currentManager === undefined) {
           newManagerData = {
-            current_manager: manager._id,
+            current_manager: managerUser._id,
             history: [],
           };
         } else {
-          let history_ = managerHistory;
+          const history_ = managerHistory;
           history_.push(currentManager);
           newManagerData = {
-            current_manager: manager._id,
+            current_manager: managerUser._id,
             history: history_,
           };
         }
 
-        // await mailHandler(subject, text, to, from);
-
-        // send Email for invite manager
-        // eslint-disable-next-line consistent-return
-        await transporter.sendMail(mailOptions, async (error, info) => {
-          if (error) {
-            console.log(error);
-            throw new APIError({
-              message: ' email is fail ',
-              status: httpStatus.CONFLICT,
+        await complexModel.update({
+          _id: complex._id,
+        }, {
+          manager: newManagerData,
+        }, (err, updatedComplex) => {
+          if (updatedComplex) {
+            res.json({
+              manager: newManagerData,
+              complex: updatedComplex,
             });
+          } else {
+            return next(err);
           }
-          console.log('Message %s sent: %s', info.messageId, info.response);
-
-          // Update Complex Manager
-          await complexModel.update({
-            _id: complex._id,
-          }, {
-            manager: newManagerData,
-          }, (err_, managerInstance) => {
-            if (err_) {
-              console.log('manager not update');
-              console.log(err_);
-            }
-            console.log('manager updated');
-            console.log(managerInstance);
-          });
         });
-        res.status(httpStatus.OK);
-        res.json({
-          message: 'manager created successfully',
-          data: manager,
-          password: randomstring,
-        });
-      }
-    });
+      })
+      .catch((promiseErro) => {
+        return next(promiseErro);
+      });
   } catch (err) {
-    throw new APIError({
-      message: ' Internal Error ',
-      status: httpStatus.CONFLICT,
-    });
+    return next(err);
   }
 };

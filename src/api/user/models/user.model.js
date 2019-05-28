@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 const {
   omitBy,
-  isNil
+  isNil,
 } = require('lodash');
 const bcrypt = require('bcryptjs');
 const moment = require('moment-timezone');
@@ -12,7 +12,7 @@ const APIError = require('../../utils/APIError');
 const {
   env,
   jwtSecret,
-  jwtExpirationInterval
+  jwtExpirationInterval,
 } = require('../../../config/vars');
 
 /**
@@ -194,7 +194,7 @@ userSchema.statics = {
     }
 
     const user = await this.findOne({
-      email
+      email,
     }).exec();
     const err = {
       status: httpStatus.UNAUTHORIZED,
