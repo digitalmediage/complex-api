@@ -2,7 +2,10 @@
 /* eslint-disable arrow-body-style */
 /* eslint-disable no-unused-expressions */
 const request = require('supertest');
-const { expect } = require('chai');
+const {
+  expect,
+} = require('chai');
+const User = require('../../api/user/models/user.model');
 const httpStatus = require('http-status');
 const Complex = require('./../../api/complex/DAO/complex.dao');
 const {
@@ -30,6 +33,7 @@ async function format(complex) {
 
 describe('Complex API', async () => {
   let dbComplex;
+  let adminAccessToken;
   beforeEach(async () => {
     dbComplex = {
       complex_1: {
@@ -57,6 +61,21 @@ describe('Complex API', async () => {
         properties: [],
       },
     };
+    const password = '1234567890';
+    const Users = {
+      admin: {
+        email: 'hamidrezanik00nia@gmail.com',
+        password,
+        role: 'admin',
+      },
+      user: {
+        email: 'hamid.nik1@yahoo.com',
+        password,
+        role: 'manager',
+      },
+    };
+
+    adminAccessToken = (await User.findAndGenerateToken(Users.admin)).accessToken;
     await Complex.insertMany([dbComplex.complex_1, dbComplex.complex_2]);
   });
 
@@ -72,14 +91,49 @@ describe('Complex API', async () => {
           const includesComplex_1 = some(res.body, complex_1);
           const includesComplex_2 = some(res.body, complex_2);
 
-          // before comparing it is necessary to convert String to Date
-          // res.body[0].createdAt = new Date(res.body[0].createdAt);
-          // res.body[1].createdAt = new Date(res.body[1].createdAt);
-
           expect(res.body.data).to.be.an('array');
-          expect(res.body).to.have.lengthOf(2);
           expect(includesComplex_1).to.be.true;
           expect(includesComplex_2).to.be.true;
+        });
+    });
+  });
+
+  describe('POST /v1/complex', () => {
+    it('should create a new complex when request is ok', () => {
+      return request(app)
+        .post('/v1/complex')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(dbComplex.complex_1)
+        .expect(httpStatus.CREATED)
+        .then((res) => {
+          expect(res.body.data).to.have.property('_id');
+        });
+    });
+  });
+
+  describe('PUT /v1/complex/:id', () => {
+    it('should update a complex when request is ok', async () => {
+      const id = (await Complex.findOne(dbComplex.complex_1))._id;
+      return request(app)
+        .put(`/v1/complex/${id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(dbComplex.complex_1)
+        .expect(httpStatus.OK)
+        .then((res) => {
+          expect(res.body.data).to.have.property('_id');
+        });
+    });
+  });
+
+  describe('PUT /v1/complex/:id', () => {
+    it('should update a complex when request is ok', async () => {
+      const id = (await Complex.findOne({}))._id;
+      return request(app)
+        .delete(`/v1/complex/${id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .expect(httpStatus.OK)
+        .then((res) => {
+          expect(res.body.message).to.be.equal('Delete Complex successfully');
         });
     });
   });

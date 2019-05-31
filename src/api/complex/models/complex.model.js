@@ -9,6 +9,7 @@ const UserModel = require('./../../user/models/user.model');
 // Utility
 const APIError = require('./../../utils/APIError');
 const { checkExistedObjectIdAtDocument } = require('./../../utils/ModelHelper');
+const GeorgiaCities = require('./../../utils/GeorgiaCities');
 
 
 const stringRequired = {
@@ -48,18 +49,27 @@ const complexSchema = new mongoose.Schema({
     ref: 'Media',
   },
   location: {
-    lan: String,
+    ll: String,
+    spn: String,
+    layer: String,
     t: String,
+    z: String,
   },
   map_model: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'mapModel',
   },
   views_count: Number,
-  city: String,
-  country: String,
+  city: {
+    type: String,
+    enum: GeorgiaCities,
+  },
+  country: {
+    type: String,
+    default: 'Georgia',
+  },
   build_year: Date,
-  address: String,
+  address: stringRequired,
   contact: {
     email: String,
     tell: stringRequired,
@@ -99,13 +109,6 @@ complexSchema.pre('save', async function save(next) {
     if (this.map_image && this.map_image !== null) {
       await checkExistedObjectIdAtDocument(this.map_image, MediaModel, null, 'image file not exist');
       console.log('map_image if block');
-    }
-
-    if (this.developer && this.developer !== null) {
-      await checkExistedObjectIdAtDocument(this.developer, UserModel, {
-        role: 'admin',
-      }, 'developer not exist');
-      console.log('developer if block');
     }
 
 

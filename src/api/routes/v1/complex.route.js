@@ -2,7 +2,7 @@
 // Main Module Dependency
 const express = require('express');
 const validate = require('express-validation');
-const { authorize, ADMIN, LOGGED_USER } = require('../../middlewares/auth');
+const { authorize, ADMIN } = require('../../middlewares/auth');
 
 // Controller
 const complexController = require('./../../complex/controllers/complex.controller');
@@ -11,7 +11,6 @@ const complexController = require('./../../complex/controllers/complex.controlle
 const {
   createComplex,
   listComplex,
-  listDeveloperComplex,
   updateComplex,
 } = require('./../../complex/validation/complex.validation');
 
@@ -64,10 +63,8 @@ router
  * @apiSuccess {Object[]}  specific complex.
  *
  */
-router.get('/developer/:developer', validate(listDeveloperComplex), complexController.getDeveloperComplex);
-router.get('/test', complexController.test);
 router
-  .route('/:id')
+  .route('/:id?')
 
   .get(complexController.getComplexById)
   .put(authorize(ADMIN), validate(updateComplex), complexController.updateComplex)
