@@ -196,6 +196,11 @@ userSchema.statics = {
     const user = await this.findOne({
       email,
     }).exec();
+    console.log('user');
+    console.log('user');
+    console.log(user);
+    console.log('user');
+    console.log('user');
     const err = {
       status: httpStatus.UNAUTHORIZED,
       isPublic: true,
@@ -204,7 +209,7 @@ userSchema.statics = {
       if (user && await user.passwordMatches(password)) {
         return {
           user,
-          accessToken: user.token()
+          accessToken: user.token(),
         };
       }
       err.message = 'Incorrect email or password';
@@ -214,7 +219,7 @@ userSchema.statics = {
       } else {
         return {
           user,
-          accessToken: user.token()
+          accessToken: user.token(),
         };
       }
     } else {
@@ -240,12 +245,12 @@ userSchema.statics = {
     const options = omitBy({
       name,
       email,
-      role
+      role,
     }, isNil);
 
     return this.find(options)
       .sort({
-        createdAt: -1
+        createdAt: -1,
       })
       .skip(perPage * (page - 1))
       .limit(perPage)
@@ -285,10 +290,10 @@ userSchema.statics = {
   }) {
     const user = await this.findOne({
       $or: [{
-        [`services.${service}`]: id
+        [`services.${service}`]: id,
       }, {
-        email
-      }]
+        email,
+      }],
     });
     if (user) {
       user.services[service] = id;
@@ -299,7 +304,7 @@ userSchema.statics = {
     const password = uuidv4();
     return this.create({
       services: {
-        [service]: id
+        [service]: id,
       },
       email,
       password,

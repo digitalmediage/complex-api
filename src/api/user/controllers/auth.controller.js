@@ -85,8 +85,11 @@ exports.confirmationPost = async (req, res, next) => {
         return res.status(500).json({
           msg: __err.message,
         });
+      } else {
+        return res.status(200).json({
+          message: 'The account has been verified. Please log in',
+        });
       }
-      return res.status(200).send('The account has been verified. Please log in.');
     });
   } catch (err) {
     next(err);

@@ -5,7 +5,6 @@ const { authorize, ADMIN, LOGGED_USER } = require('../../middlewares/auth');
 const {
   listUsers,
   createUser,
-  replaceUser,
   updateUser,
 } = require('../../user/validations/user.validation');
 
@@ -142,7 +141,7 @@ router
    * @apiError (Forbidden 403)    Forbidden    Only user with same id or admins can modify the data
    * @apiError (Not Found 404)    NotFound     User does not exist
    */
-  .put(authorize(LOGGED_USER), validate(replaceUser), controller.replace)
+// .put(authorize(LOGGED_USER), validate(replaceUser), controller.replace)
   /**
    * @api {patch} v1/users/:id Update User
    * @apiDescription Update some fields of a user document
@@ -170,7 +169,7 @@ router
    * @apiError (Forbidden 403)    Forbidden    Only user with same id or admins can modify the data
    * @apiError (Not Found 404)    NotFound     User does not exist
    */
-  .patch(authorize(LOGGED_USER), validate(updateUser), controller.update)
+  .put(authorize(LOGGED_USER), validate(updateUser), controller.update)
   /**
    * @api {patch} v1/users/:id Delete User
    * @apiDescription Delete a user
