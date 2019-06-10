@@ -41,6 +41,7 @@ exports.createPayment = (req, res, next) => {
   if (req.user.role && req.user.role !== 'manager') {
     throw new APIError({
       message: 'user permission error',
+      errors: 'user permission error',
       status: httpStatus.CONFLICT,
     });
   }
@@ -97,7 +98,8 @@ exports.updatePayment = (req, res, next) => {
 
   if (req.user.role && req.user.role !== 'manager') {
     throw new APIError({
-      message: 'user permission error manager',
+      message: 'user permission error',
+      errors: 'user permission error',
       status: httpStatus.CONFLICT,
     });
   }

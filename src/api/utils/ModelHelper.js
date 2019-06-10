@@ -17,14 +17,12 @@ exports.checkExistedObjectIdAtDocument =
         };
       }
       const uploadFile = await model.find(queryObj);
-      console.log(uploadFile.length);
-      console.log('developer');
 
       if (uploadFile.length === 0) {
         throw new APIError({
           message: errMeesage,
           status: httpStatus.CONFLICT,
-          isPublic: true,
+          errors: errMeesage,
         });
       }
     } catch (err) {
@@ -32,7 +30,7 @@ exports.checkExistedObjectIdAtDocument =
       throw new APIError({
         message: `Internal Erro (catch) @ ${errMeesage}`,
         status: httpStatus.CONFLICT,
-        isPublic: true,
+        errors: errMeesage,
       });
     }
   };

@@ -52,6 +52,21 @@ exports.setPermishion = async (req, res, next) => {
     const newManager = new UserModel(requestData);
     newManager.save()
       .then(async (managerUser) => {
+
+        // find complex
+        const complex = await complexModel.findOne({
+          _id: req.body.complex,
+        });
+
+        if (!complex) {
+          throw new APIError({
+            message: 'Complex not found',
+            errors: 'Complex not found',
+            status: httpStatus.CONFLICT,
+            isPublic: true,
+          });
+        }
+
         // Email configurations
         const mailOptions = {
           from: 'complex',
@@ -68,26 +83,14 @@ exports.setPermishion = async (req, res, next) => {
         if (!emailStatus && !emailStatus.includes('OK')) {
           throw new APIError({
             message: 'Email can not send',
+            errors: 'Email can not send',
             status: httpStatus.CONFLICT,
             isPublic: true,
           });
         }
 
-        const complex = await complexModel.findOne({ _id: req.body.complex });
-        console.log(complex);
-        console.log('complex');
-        console.log(complex);
-
-        if (!complex) {
-          throw new APIError({
-            message: 'Complex not found',
-            status: httpStatus.CONFLICT,
-            isPublic: true,
-          });
-        }
 
         // Get current manager and other previous
-        console.log(complex);
         const currentManager = complex.manager.current_manager;
         const managerHistory = complex.manager.history;
 

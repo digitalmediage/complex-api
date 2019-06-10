@@ -12,27 +12,31 @@ const APIError = require('../../utils/APIError');
 
 
 exports.CreateCharge = (req, res, next) => {
-  if (req.user.role && req.user.role !== 'manager') {
-    throw new APIError({
-      message: 'user permission error manager',
-      status: httpStatus.CONFLICT,
-    });
-  }
-
-  chargeModel.create(req.body, (err, charge) => {
-    if (err) {
-      res.status(httpStatus.BAD_GATEWAY);
-      res.json({
-        error: err,
-      });
-    } else {
-      res.status(httpStatus.OK);
-      res.json({
-        message: 'charge created successfully',
-        data: charge,
+  try {
+    if (req.user.role && req.user.role !== 'manager') {
+      throw new APIError({
+        message: 'user permission error manager',
+        status: httpStatus.CONFLICT,
       });
     }
-  });
+
+    chargeModel.create(req.body, (err, charge) => {
+      if (err) {
+        res.status(httpStatus.BAD_GATEWAY);
+        res.json({
+          error: err,
+        });
+      } else {
+        res.status(httpStatus.OK);
+        res.json({
+          message: 'charge created successfully',
+          data: charge,
+        });
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 exports.GetCharge = (req, res, next) => {

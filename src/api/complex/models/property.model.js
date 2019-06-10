@@ -49,9 +49,13 @@ const propertySchema = new mongoose.Schema({
   views_count: Number,
   veranda_size: Number,
   information: String,
+  condition: {
+    type: String,
+    enum: ['black frame', 'white frame'],
+  },
   type: {
     type: String,
-    enum: ['Home', 'office', 'land', 'apartment', 'commercial'],
+    enum: ['apartment', 'office', 'commercial'],
   },
   status: {
     type: String,
@@ -59,7 +63,7 @@ const propertySchema = new mongoose.Schema({
   },
   deal_type: {
     type: String,
-    enum: ['sell', 'rent', 'short_term_rent', 'lease', 'barter'],
+    enum: ['sell', 'rent'],
   },
   cadastra: String,
   soft_delete: Boolean,

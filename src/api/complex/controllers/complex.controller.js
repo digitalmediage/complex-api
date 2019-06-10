@@ -7,10 +7,15 @@ const httpStatus = require('http-status');
 
 // Models
 const ComplexModel = require('./../DAO/complex.dao');
+const MediaModel = require('./../models/media.model');
 
 // Utility
 const parseQuery = require('./../../utils/parseQuery');
+const APIError = require('../../utils/APIError');
 const makeResponse = require('./../../utils/makeResponse');
+const {
+  checkExistedObjectIdAtDocument,
+} = require('./../../utils/ModelHelper');
 // const APIError = require('../../utils/APIError');
 const {
   omit,
@@ -104,9 +109,22 @@ exports.getComplexById = (req, res, next) => {
  * @public
  */
 
-exports.updateComplex = (req, res, next) => {
+exports.updateComplex = async (req, res, next) => {
   try {
+    // eslint-disable-next-line no-unused-vars
+    const shima = 'hamid';
+    if (req.params.id !== req.user.id) {
+      throw new APIError({
+        message: ' Forbidden',
+        errors: 'Forbidden',
+        status: httpStatus.CONFLICT,
+      });
+    }
     const query = omit(req.body, 'developer');
+
+    if (req.body.map_image) {
+      await checkExistedObjectIdAtDocument(req.body.map_image, MediaModel, null, 'image file not exist');
+    }
 
     ComplexModel.update({
       _id: req.params.id,

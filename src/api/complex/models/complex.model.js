@@ -8,7 +8,9 @@ const UserModel = require('./../../user/models/user.model');
 
 // Utility
 const APIError = require('./../../utils/APIError');
-const { checkExistedObjectIdAtDocument } = require('./../../utils/ModelHelper');
+const {
+  checkExistedObjectIdAtDocument,
+} = require('./../../utils/ModelHelper');
 const GeorgiaCities = require('./../../utils/GeorgiaCities');
 
 
@@ -94,6 +96,21 @@ complexSchema.index({
  * - validations
  * - virtuals
  */
+
+// complexSchema.pre('update', async (next) => {
+//   try {
+//     console.log('map_image -- block');
+//     console.log(this.map_image);
+//     if (this.map_image !== null) {
+//       await checkExistedObjectIdAtDocument(this.map_image, MediaModel, null, 'image file not exist');
+//       console.log('map_image if block');
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
+
 complexSchema.pre('save', async function save(next) {
   try {
     // generate custom cadastra code
