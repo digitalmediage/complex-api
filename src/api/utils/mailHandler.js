@@ -1,17 +1,26 @@
+/* eslint-disable consistent-return */
 const nodeMailer = require('nodemailer');
 // const httpStatus = require('http-status');
 // const APIError = require('./APIError');
 
+function transporter() {
+  try {
+    const transporter_ = nodeMailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: 'hamidrezanik00nia@gmail.com',
+        pass: '12zx3c6635766m',
+      },
+    });
 
-const transporter = nodeMailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,
-  auth: {
-    user: 'hamidrezanik00nia@gmail.com',
-    pass: '12zx3c6635766m',
-  },
-});
+    return transporter_;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 
 //   const mailOptions = {
 //     from, // sender address
@@ -22,4 +31,4 @@ const transporter = nodeMailer.createTransport({
 //   };
 
 
-module.exports = transporter;
+module.exports = transporter();
