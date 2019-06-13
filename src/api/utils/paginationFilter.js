@@ -14,7 +14,8 @@ exports.listComplex = (
     })
     .skip(perPage * (page - 1))
     .limit(perPage)
-    .populate('properties');
+    .populate('properties')
+    .populate('baner_image media map_image');
 };
 
 exports.listPayment = (

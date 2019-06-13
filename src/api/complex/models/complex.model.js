@@ -42,10 +42,14 @@ const complexSchema = new mongoose.Schema({
     history: [mongoose.Schema.Types.ObjectId],
   },
   information: String,
-  media: {
-    type: [mongoose.Schema.Types.ObjectId],
+  baner_image: {
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Media',
   },
+  media: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Media',
+  }],
   map_image: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Media',
@@ -69,6 +73,10 @@ const complexSchema = new mongoose.Schema({
   country: {
     type: String,
     default: 'Georgia',
+  },
+  currency: {
+    type: String,
+    default: '$',
   },
   build_year: Date,
   address: stringRequired,

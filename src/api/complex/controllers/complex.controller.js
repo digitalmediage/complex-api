@@ -55,6 +55,7 @@ exports.createComplex = (req, res, next) => {
 
 exports.getComplex = (req, res, next) => {
   try {
+    console.log(req.baseUrl);
     const query = req.query;
 
     // Parse query for Filters on Model (helper fn)

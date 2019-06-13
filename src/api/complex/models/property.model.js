@@ -23,8 +23,14 @@ const propertySchema = new mongoose.Schema({
   },
   owner: ObjectId,
   media: {
-    type: [ObjectId],
-    ref: 'Media',
+    baner: {
+      type: [ObjectId],
+      ref: 'Media',
+    },
+    images: {
+      type: [ObjectId],
+      ref: 'Media',
+    },
   },
   size: Number,
   rooms: {
