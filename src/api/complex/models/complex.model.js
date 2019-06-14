@@ -44,15 +44,15 @@ const complexSchema = new mongoose.Schema({
   information: String,
   baner_image: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Media',
+    ref: 'Img',
   },
   media: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Media',
+    ref: 'Img',
   }],
   map_image: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Media',
+    ref: 'Img',
   },
   location: {
     ll: String,
@@ -131,10 +131,10 @@ complexSchema.pre('save', async function save(next) {
     // logic => image not uploaded, id not exist
 
 
-    if (this.map_image && this.map_image !== null) {
-      await checkExistedObjectIdAtDocument(this.map_image, MediaModel, null, 'image file not exist');
-      console.log('map_image if block');
-    }
+    // if (this.map_image && this.map_image !== null) {
+    //   await checkExistedObjectIdAtDocument(this.map_image, MediaModel, null, 'image file not exist');
+    //   console.log('map_image if block');
+    // }
 
 
     return next();

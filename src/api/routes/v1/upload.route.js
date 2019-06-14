@@ -1,6 +1,8 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
+const Img = require('./../../core/models/Img.model');
 const Media = require('./../../complex/models/media.model');
 
 const router = express.Router();
@@ -30,22 +32,33 @@ router.get('/', uploadHandler);
 // eslint-disable-next-line consistent-return
 router.post('/', upload.single('myFile'), (req, res, next) => {
   // eslint-disable-next-line prefer-destructuring
-  const file = req.file;
-  if (!file) {
-    const error = new Error('Please upload a file');
-    error.httpStatusCode = 400;
-    return next(error);
-  }
 
-  const Media_ = {
-    path: `${file.path}.${req.type || 'jpg'}`,
-    name: req.name || '',
-  };
+  const new_img = new Img();
+  new_img.img.data = fs.readFileSync(req.file.path);
+  new_img.img.contentType = 'image/jpeg';
+  new_img.save();
 
-  const MediaObj = new Media(Media_);
-  MediaObj.save();
+  res.send(new_img._id);
 
-  res.send(MediaObj);
+
+
+
+  // const file = req.file;
+  // if (!file) {
+  //   const error = new Error('Please upload a file');
+  //   error.httpStatusCode = 400;
+  //   return next(error);
+  // }
+
+  // const Media_ = {
+  //   path: `${file.path}.${req.type || 'jpg'}`,
+  //   name: req.name || '',
+  // };
+
+  // const MediaObj = new Media(Media_);
+  // MediaObj.save();
+
+  // res.send(MediaObj);
 });
 
 module.exports = router;
