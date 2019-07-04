@@ -44,15 +44,15 @@ const complexSchema = new mongoose.Schema({
   information: String,
   baner_image: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Img',
+    ref: 'Media',
   },
   media: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Img',
+    ref: 'Media',
   }],
   map_image: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Img',
+    ref: 'Media',
   },
   location: {
     ll: String,

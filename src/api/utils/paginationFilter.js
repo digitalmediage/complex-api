@@ -15,6 +15,13 @@ exports.listComplex = (
     .skip(perPage * (page - 1))
     .limit(perPage)
     .populate('properties')
+    .populate({
+      path: 'properties',
+      populate: {
+        path: 'media.images media.baner',
+        model: 'Media',
+      },
+    })
     .populate('baner_image media map_image');
 };
 
@@ -64,6 +71,7 @@ exports.listProperty = (
     })
     .skip(perPage * (page - 1))
     .limit(perPage)
-    .populate('complex');
+    .populate('complex')
+    .populate('media.images media.baner');
 };
 //   const options = omitBy({ name, email, role }, isNil);

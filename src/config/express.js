@@ -6,6 +6,7 @@ const methodOverride = require('method-override');
 const cors = require('cors');
 // const helmet = require('helmet');
 const passport = require('passport');
+const path = require('path');
 const routes = require('../api/routes/v1');
 const { logs } = require('./vars');
 const strategies = require('./passport');
@@ -16,6 +17,14 @@ const error = require('../api/middlewares/error');
 * @public
 */
 const app = express();
+
+// app.use(express.static('public'));
+// app.use('/img', express.static('public'));
+const rootDir = path.dirname(require.main.filename);
+const patchStatic = path.join(rootDir, '/storage');
+app.use('/static', express.static(patchStatic));
+console.log(rootDir);
+console.log(path.join(rootDir, '/storage'));
 
 // request logging. dev: console | production: file
 app.use(morgan(logs));

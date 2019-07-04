@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
@@ -14,7 +15,7 @@ const storage = multer.diskStorage({
     cb(null, path.join(rootDir, '/storage/uploads/'));
   },
   filename(req, file, cb) {
-    cb(null, `${file.fieldname}-${Date.now()}`);
+    cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
   },
 });
 
@@ -33,32 +34,33 @@ router.get('/', uploadHandler);
 router.post('/', upload.single('myFile'), (req, res, next) => {
   // eslint-disable-next-line prefer-destructuring
 
-  const new_img = new Img();
-  new_img.img.data = fs.readFileSync(req.file.path);
-  new_img.img.contentType = 'image/jpeg';
-  new_img.save();
 
-  res.send(new_img._id);
+  // Save Image in Data-base
+  // const new_img = new Img();
+  // new_img.img.data = fs.readFileSync(req.file.path);
+  // new_img.img.contentType = 'image/jpeg';
+  // new_img.save();
+  // res.send(new_img._id);
 
 
+  const file = req.file;
+  console.log(file);
+  if (!file) {
+    const error = new Error('Please upload a file');
+    error.httpStatusCode = 400;
+    return next(error);
+  }
 
+  const fullUrl = `${req.protocol}://${req.get('host')}`;
+  const Media_ = {
+    path: `${fullUrl}/static/uploads/${file.filename}`,
+    name: req.name || '',
+  };
 
-  // const file = req.file;
-  // if (!file) {
-  //   const error = new Error('Please upload a file');
-  //   error.httpStatusCode = 400;
-  //   return next(error);
-  // }
+  const MediaObj = new Media(Media_);
+  MediaObj.save();
 
-  // const Media_ = {
-  //   path: `${file.path}.${req.type || 'jpg'}`,
-  //   name: req.name || '',
-  // };
-
-  // const MediaObj = new Media(Media_);
-  // MediaObj.save();
-
-  // res.send(MediaObj);
+  res.send(MediaObj);
 });
 
 module.exports = router;

@@ -9,7 +9,7 @@ exports.createNews = (req, res, next) => {
     }
 
     res.json({
-      message: 'Complex created successfully',
+      message: 'News created successfully',
       data: complex,
       status: 200,
     });
@@ -27,7 +27,7 @@ exports.getNews = (req, res, next) => {
     console.log(complex);
 
     res.json({
-      message: 'Get complex',
+      message: 'Get News',
       data: complex,
       status: 200,
     });

@@ -24,20 +24,24 @@ const propertySchema = new mongoose.Schema({
   owner: ObjectId,
   media: {
     baner: {
-      type: [ObjectId],
+      type: ObjectId,
       ref: 'Media',
     },
-    images: {
+    images: [{
       type: [ObjectId],
       ref: 'Media',
-    },
+    }],
   },
   size: Number,
   rooms: {
-    beds_rooms: Number,
-    rest_rooms: Number,
-    bath_rooms: Number,
-    garage: Number,
+    beds_rooms: {
+      type: Number,
+      default: 0,
+    },
+    bath_rooms: {
+      type: Number,
+      default: 0,
+    },
   },
   features: [String],
   furnish: {
@@ -61,7 +65,7 @@ const propertySchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['apartment', 'office', 'commercial'],
+    enum: ['Apartment', 'Office', 'Commercial'],
   },
   status: {
     type: String,

@@ -10,6 +10,7 @@ const uploadRoutes = require('./upload.route');
 const sampleRoutes = require('./sample.route');
 const newsRoutes = require('./news.route');
 const developerRoutes = require('./developer.route');
+const notificationRoute = require('./notification.route');
 
 const router = express.Router();
 
@@ -23,6 +24,7 @@ router.get('/status', (req, res) => res.send('OK'));
  */
 router.use('/docs', express.static('docs'));
 
+
 router.use('/users', userRoutes);
 router.use('/auth', authRoutes);
 router.use('/complex', complexRoutes);
@@ -32,6 +34,7 @@ router.use('/manager', managerRoutes);
 router.use('/test', sampleRoutes);
 router.use('/news', newsRoutes);
 router.use('/developer', developerRoutes);
+router.use('/notification', notificationRoute);
 
 
 module.exports = router;

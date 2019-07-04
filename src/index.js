@@ -56,7 +56,6 @@ mongoose.connect();
 
 
 // createTerminus(app, terminusOptions);
-
 // listen to requests
 app.listen(port, () => logger.info(`server started on port ${port} (${env})`));
 

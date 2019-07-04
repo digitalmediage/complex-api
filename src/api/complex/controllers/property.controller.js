@@ -4,6 +4,7 @@ const httpStatus = require('http-status');
 
 // Model
 const Property = require('./../DAO/property.dao');
+const Complex = require('./../DAO/complex.dao');
 
 // Utility
 const parseQuery = require('./../../utils/parseQuery');
@@ -41,14 +42,53 @@ exports.getProperties = (req, res, next) => {
   }, options);
 };
 
+const addToComplex = async (complexId, propertyId, next) => {
+  try {
+    const complex = await Complex.find({ _id: complexId });
+    if (complex || complex !== null || complex !== undefined) {
+      console.log('complex__ee__');
+      console.log(complex);
+      console.log('complex__ee_');
+      if (complex.length === 0) {
+        throw new APIError({
+          message: ' complex not exist ',
+          errors: 'complex not exist',
+          status: httpStatus.CONFLICT,
+        });
+      } else {
+        console.log('complex_____');
+        console.log(complex[0]);
+        console.log('complex_____');
+        const currentProperties = complex[0].properties;
+        currentProperties.push(propertyId);
+
+        await Complex.update(complexId, { properties: currentProperties }, (err, complex) => {
+          if (err) {
+            throw new APIError({
+              message: ' complex cant update ',
+              errors: 'complex cant update',
+              status: httpStatus.CONFLICT,
+            });
+          }
+
+          console.log('property added succsesfully');
+        });
+      }
+    }
+  } catch (err) {
+    return next(err);
+  }
+};
+
 exports.createProperty = (req, res, next) => {
-  Property.create(req.body, (err, property) => {
+  Property.create(req.body, async (err, property) => {
     if (err) {
       res.status(httpStatus.BAD_GATEWAY);
       res.json({
         error: err,
       });
     } else {
+      await addToComplex(req.body.complex, property._id, next);
       res.status(httpStatus.OK);
       res.json({
         data: property,
