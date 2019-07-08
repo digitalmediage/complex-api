@@ -10,7 +10,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(authorize(LOGGED_USER), notificationController.getNotification)
-  .post(authorize(LOGGED_USER), notificationController.createNotification);
+  .get(authorize(), notificationController.getNotification)
+  .post(authorize(), notificationController.createNotification);
 
 module.exports = router;
