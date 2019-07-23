@@ -122,7 +122,7 @@ userSchema.post('save', (error, res, next) => {
 userSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['id', 'name', 'email', 'picture', 'role', 'createdAt'];
+    const fields = ['id', 'name', 'email', 'picture', 'isVerified', 'role', 'createdAt'];
 
     fields.forEach((field) => {
       transformed[field] = this[field];

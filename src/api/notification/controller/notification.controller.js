@@ -1,3 +1,5 @@
+/* eslint-disable prefer-destructuring */
+/* eslint-disable no-unused-expressions */
 /* eslint-disable consistent-return */
 const NotificationModel = require('../DAO/notification.dao');
 
@@ -5,6 +7,7 @@ const NotificationModel = require('../DAO/notification.dao');
 const makeResponse = require('./../../utils/makeResponse');
 const APIError = require('../../utils/APIError');
 const httpStatus = require('http-status');
+const parseQuery = require('../../utils/parseQuery');
 
 
 exports.createNotification = (req, res, next) => {
@@ -34,7 +37,14 @@ exports.createNotification = (req, res, next) => {
 
 exports.getNotification = (req, res, next) => {
   try {
-    NotificationModel.get(req.body, (err, complex) => {
+    const query = req.query;
+
+    // Parse query for Filters on Model (helper fn)
+    const filterOptions = ['createdAt'];
+    const parsedQuery = parseQuery(query, filterOptions);
+    // eslint-disable-next-line prefer-const
+
+    NotificationModel.get(parsedQuery, (err, complex) => {
       // Get Error and Result for create response
       makeResponse({
         error: err,

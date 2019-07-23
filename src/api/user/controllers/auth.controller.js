@@ -52,7 +52,7 @@ exports.confirmationPost = async (req, res, next) => {
 
     if (!verificationToken) {
       throw new APIError({
-        message: 'confirmation params not exist and token my have expired',
+        message: 'confirmation params not exist and token expired',
         status: httpStatus.CONFLICT,
       });
     }
@@ -75,22 +75,23 @@ exports.confirmationPost = async (req, res, next) => {
         type: 'already-verified',
         msg: 'This user has already been verified.',
       });
+    } else {
+      // user exist and must be verify
+      // eslint-disable-next-line no-param-reassign
+      user.isVerified = true;
+      user.save((__err) => {
+        if (__err) {
+          return res.status(500).json({
+            msg: __err.message,
+          });
+        } else {
+          return res.redirect('http://localhost:3000');
+        // return res.status(200).json({
+        //   message: 'The account has been verified. Please log in',
+        // });
+        }
+      });
     }
-
-    // user exist and must be verify
-    // eslint-disable-next-line no-param-reassign
-    user.isVerified = true;
-    user.save((__err) => {
-      if (__err) {
-        return res.status(500).json({
-          msg: __err.message,
-        });
-      } else {
-        return res.status(200).json({
-          message: 'The account has been verified. Please log in',
-        });
-      }
-    });
   } catch (err) {
     next(err);
   }

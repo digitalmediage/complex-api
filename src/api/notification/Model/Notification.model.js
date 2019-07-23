@@ -1,5 +1,6 @@
 // Core main module dependency
 const mongoose = require('mongoose');
+const moment = require('moment');
 
 
 const stringRequired = {
@@ -13,20 +14,19 @@ const stringRequired = {
  * @private
  */
 
-const notificationSchema = new mongoose.Schema(
-  {
-    owner: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-    },
-    title: stringRequired,
-    content: String,
-    status: String,
+const notificationSchema = new mongoose.Schema({
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
   },
-  {
-    timestamps: true,
+  title: stringRequired,
+  content: String,
+  status: String,
+  createdAt: {
+    type: String,
+    default: moment().format('MM/DD/YYYY'),
   },
-);
+});
 
 notificationSchema.index({
   '$**': 'text',
