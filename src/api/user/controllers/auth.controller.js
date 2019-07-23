@@ -85,7 +85,7 @@ exports.confirmationPost = async (req, res, next) => {
             msg: __err.message,
           });
         } else {
-          return res.redirect('http://localhost:3000');
+          return res.redirect('http://localhost:3000/token-confirmation');
         // return res.status(200).json({
         //   message: 'The account has been verified. Please log in',
         // });
